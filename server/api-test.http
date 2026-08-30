@@ -1,0 +1,37 @@
+### health check
+
+GET http://localhost:3000/
+
+### create new user
+POST http://localhost:3000/v1/new-user
+Content-Type: application/json
+
+{
+    "name": "Ujjwal",
+    "email": "ujjwal234234@chan.com"
+}
+
+### get all users
+GET http://localhost:3000/v1/users
+
+### create new posts for a user
+POST http://localhost:3000/v1/new-post
+Content-Type: application/json
+
+{
+    "title": "Best websites to listen music",
+    "authorId": "f1fdf6c5-b5ca-441e-965b-95945562de58"
+}
+
+### get all posts
+GET http://localhost:3000/v1/posts
+
+
+### update a post
+PUT http://localhost:3000/v1/update-post/4
+Content-Type: application/json
+
+{
+    "authorId": "f1fdf6c5-b5ca-441e-965b-95945562de58",
+    "published": true
+}
