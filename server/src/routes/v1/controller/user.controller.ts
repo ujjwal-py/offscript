@@ -3,19 +3,21 @@ import { prisma } from "../../../lib/prisma"
 import jwt from "jsonwebtoken"
 import "dotenv/config"
 import bcrypt from "bcrypt"
-
-
-interface UserBody {
-    name?: string,
-    email: string,
-    password: string
-}
+import { CustomError, NotFoundError, UnauthorizedError } from "../../../errors/CustomErrors"
+import { UserBody } from "../../../schemas/user.schema"
 
 const jwt_secret = process.env.JWT_SECRET!
 
-
 export const createUser = async (req: Request<{}, any, UserBody>, res: Response) => {
     const { name, email, password } = req.body
+    const isExist = await prisma.user.findUnique({
+        where: {
+            email: email
+        }
+    })
+    if (isExist) {
+        throw new CustomError(409, "UE409", "Email already exists");
+    }
     const hashedPassword = await bcrypt.hash(password, 12)
     const newUser = await prisma.user.create({
         data: {
@@ -41,18 +43,18 @@ export const logIn = async (req: Request<{}, any, UserBody>, res: Response) => {
         }
     })
     if (!user) {
-        return res.status(404).json({ message: "user not found" });
+        throw new NotFoundError("User Not Found");
     }
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
-        return res.status(404).json({ message: "invalid password" })
+        throw new UnauthorizedError("Invalid Password");
     }
     const token = jwt.sign({ user_id: user.id }, jwt_secret)
     res.cookie("jwt_token", token, {
         maxAge: 24 * 60 * 60 * 1000,
         httpOnly: true
     })
-    res.status(200).json({ user: user, token: token });
+    res.status(200).json({ message: "User signin Succesfully" });
 
 }
 

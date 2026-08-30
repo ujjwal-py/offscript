@@ -1,13 +1,14 @@
 import { Request, Response } from "express";
 import { prisma } from "../../../lib/prisma";
 import { NewPostBody, UpdatePostBody } from "../../../schemas/post.schema";
+import { UnauthorizedError } from "../../../errors/CustomErrors";
 
 
 export const createPost = async (req: Request<{}, any, NewPostBody>, res: Response) => {
     const { title, description } = req.body;
     const authorId = req.user?.user_id;
     if (!authorId) {
-        return res.status(401).json({ message: "unauthorized" })
+        throw new UnauthorizedError();
     }
     const newPost = await prisma.posts.create({
         data: {
@@ -22,7 +23,7 @@ export const createPost = async (req: Request<{}, any, NewPostBody>, res: Respon
 export const editPost = async (req: Request<{ id: string }, any, UpdatePostBody>, res: Response) => {
     const authorId = req.user?.user_id;
     if (!authorId) {
-        return res.status(401).json({ message: "unauthorized" })
+        throw new UnauthorizedError();
     }
     const id = parseInt(req.params.id, 10);
     const { title, description, published } = req.body;

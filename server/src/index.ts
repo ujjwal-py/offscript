@@ -1,7 +1,8 @@
-import express, { Request, Response } from "express";
+import express, { ErrorRequestHandler, NextFunction, Request, Response } from "express";
 import v1 from "./routes/v1";
 import "dotenv/config"
 import cookieParser from 'cookie-parser';
+import { errorHandler } from "./middlewares/errorHandler";
 
 
 
@@ -15,6 +16,7 @@ app.get("/", (req: Request, res: Response) => {
     res.send("Hello World");
 })
 app.use("/v1", v1);
+app.use(errorHandler)
 
 app.listen(port, () => {
     console.log("server is running on ", port)
