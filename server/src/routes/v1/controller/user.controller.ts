@@ -31,7 +31,7 @@ export const createUser = async (req: Request<{}, any, UserBody>, res: Response)
         maxAge: 24 * 60 * 60 * 1000,
         httpOnly: true
     })
-    res.status(200).json({ user: newUser, token: token });
+    res.status(200).json({ message: "user created" });
 }
 
 export const logIn = async (req: Request<{}, any, UserBody>, res: Response) => {
@@ -65,4 +65,24 @@ export const allUsers = async (req: Request, res: Response) => {
         }
     });
     res.status(200).json(users);
+}
+
+export const getMe = async (req: Request, res: Response) => {
+    const id = req.user?.user_id;
+    const user = await prisma.user.findUnique({
+        where: {
+            id: id
+        }
+    });
+    if (!user) {
+        throw new UnauthorizedError();
+    }
+    res.status(200).json(user);
+}
+
+export const logout = async (req: Request, res: Response) => {
+    res.clearCookie("jwt_token", {
+        httpOnly: true
+    });
+    res.status(200).json({ message: "Logged out" });
 }

@@ -48,6 +48,34 @@ export const getAllPosts = async (req: Request, res: Response) => {
     const posts = await prisma.posts.findMany({
         where: {
             published: true
+        },
+        select: {
+            id: true,
+            title: true,
+            description: true,
+            author: {
+                select: {
+                    name: true,
+                    email: true
+                }
+            }
+        }
+    });
+    res.status(200).json(posts);
+}
+
+export const getUserPosts = async (req: Request, res: Response) => {
+    const authorId = req.user?.user_id;
+    const posts = await prisma.posts.findMany({
+        where: {
+            authorId: authorId
+        },
+        select: {
+            id: true,
+            title: true,
+            description: true,
+            published: true,
+            updatedAt: true,
         }
     });
     res.status(200).json(posts);
