@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import { api } from '../Api';
+import useFetch from '../hooks/useFetch';
 
 type Author = {
     email: string,
@@ -15,25 +14,13 @@ type Post = {
 
 
 function Home() {
-    const [posts, setPosts] = useState<Post[]>([]);
-    const getPosts = async () => {
-        try {
-            const response = await api.get("/posts");
-            setPosts(response.data);
-            // console.log(response?.data);
+    const { data, loading } = useFetch<Post[]>("/posts");
 
-        } catch (err) {
-            console.log(err);
-        }
-    }
-    useEffect(() => {
-        getPosts();
-    }, []);
     return (
         <div>
-            <h1 className='text-4xl'>All your posts are here</h1>
-            <ul>
-                {posts.map((post) => (
+            <h1 className='text-4xl text-black'>Top Posts</h1>
+            {!loading ? <ul>
+                {data?.map((post) => (
                     <li key={post.id}>
                         <h2>{post.title}</h2>
                         <h3>{post.author.name} - {post.author.email}</h3>
@@ -41,8 +28,14 @@ function Home() {
                     </li>
                 ))}
             </ul>
+                :
+                <h2>Hold on we are fetching posts</h2>}
+
         </div>
     )
+
+
+
 }
 
 export default Home

@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { api } from '../Api'
-import { useAuth } from '../context/UserContext';
+import { useAuth } from '../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 type SignInBody = {
     name?: string,
     email: string,
@@ -9,8 +10,9 @@ type SignInBody = {
 type mode = "signin" | "signup";
 
 function Sign() {
+    const navigate = useNavigate();
     const [mode, setMode] = useState<mode>("signup");
-    const { login } = useAuth();
+    const { user, login } = useAuth();
     const [formData, setFormData] = useState<SignInBody>({
         name: "",
         email: "",
@@ -26,19 +28,31 @@ function Sign() {
     const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const res = mode === "signin" ? await api.post("/signin", formData) : await api.post("/signup", formData);
+            if (mode === "signin") {
+                await api.post("/signin", formData)
+            }
+            else {
+                await api.post("/signup", formData);
+            }
             login(); // context
             setFormData({
                 name: "",
                 email: "",
                 password: ""
             })
-            console.log(res.data);
+            // console.log(res.data);
+            navigate("/profile")
+
         } catch (err) {
             console.log(err);
         }
 
     }
+    useEffect(() => {
+        if (user) {
+            navigate("/profile");
+        }
+    }, [user])
     return (
         <div className='m-2'>
             <form onSubmit={handleSubmit}

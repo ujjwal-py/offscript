@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { api } from '../Api';
 import type { UserPost } from '../types';
+import useFetch from '../hooks/useFetch';
 
 type newPost = {
     title: string,
@@ -8,7 +9,11 @@ type newPost = {
     published: boolean
 }
 
-function NewPost() {
+type Prop = {
+    setRefresh: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+function NewPost(props: Prop) {
     const [data, setData] = useState<newPost>({
         title: "",
         description: "",
@@ -16,28 +21,33 @@ function NewPost() {
     });
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setData((prev) => ({
-            ...prev,
-            [name]: value
-        }))
+        if (name === "published") {
+            setData((prev) => ({
+                ...prev,
+                published: value === "publish"
+            }))
+        }
+        else {
+            setData((prev) => ({
+                ...prev,
+                [name]: value,
+            }))
+        }
     }
 
     const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (e.target.name === "submit") {
-            setData((prev) => ({
-                ...prev,
-                published: true
-            }))
-        }
         try {
-            const res = await api.post("/new-post", data);
+            const postData = data;
+            console.log(postData);
+            const res = await api.post("/new-post", postData);
             setData({
                 title: "",
                 description: "",
                 published: false
             })
             console.log(res.data);
+            props.setRefresh((prev) => !prev);
         } catch (err) {
             console.log(err);
         }
@@ -66,76 +76,67 @@ function NewPost() {
                         placeholder='add a description for your post'
                         className='bg-cyan-950' />
                 </div >
-                <button type='submit' name='submit'
-                    className='bg-cyan-950 cursor-pointer' >Publish
-                </button>
-                <button type='submit' name='save'
-                    className='bg-cyan-950 cursor-pointer' >Save Draft
+                <div className='flex gap-6'>
+                    <p>Save as draft?</p>
+                    <label>Yes</label>
+                    <input type='radio'
+                        name='published'
+                        value="draft"
+                        checked={data.published === false}
+                        onChange={handleChange} />
+                    <label>No</label>
+                    <input type='radio'
+                        name='published'
+                        value="publish"
+                        checked={data.published === true}
+                        onChange={handleChange} />
+                </div>
+                <button type='submit'
+                    className='bg-cyan-950 cursor-pointer' >
+                    {data.published ? "Publish Post" : "Save Draft"}
                 </button>
             </form >
         </div>
     )
 }
 
-function Myposts() {
-    const [data, setData] = useState<UserPost[]>([]);
-    const [publishedPosts, setPublishedPosts] = useState<UserPost[]>([]);
-    const [draftedPosts, setDraftedPosts] = useState<UserPost[]>([]);
+function MyPosts() {
 
+    const { data, loading, refetch } = useFetch<UserPost[]>("/drafts");
+    const [refresh, setRefresh] = useState<boolean>(false);
+    // console.log(loading);
     useEffect(() => {
-        const fetchUserPosts = async () => {
-            try {
-                const reponse = await api.get('/user-posts');
-                setData(reponse.data);
-                setPublishedPosts(
-                    data.filter((post) => post.published === true)
-                )
-                setDraftedPosts(
-                    data.filter((post) => post.published === false)
-                )
-            } catch (err) {
-                console.log(err);
-                setData([]);
-            }
-        }
+        refetch();
+    }, [refresh]);
 
-        fetchUserPosts();
-    }, []);
+
     return (
         <div className='text-black'>
-            <NewPost />
+            <NewPost setRefresh={setRefresh} />
 
             {/* display posts  */}
 
             {/* drafted posts */}
             <div>
-                <h2>Drafted Posts</h2>
-                <ul>
-                    {draftedPosts.map((post) => (
-                        <li key={post.id}>
-                            <h3>{post.title}</h3>
-                            <h4>{post.last_updated}</h4>
-                            <p>{post.description}</p>
-                        </li>
-                    ))}
-                </ul>
+                <h2 className='text-2xl'>Drafted Posts</h2>
+                {loading === false ?
+                    <ul className='p-2'>
+                        {data?.map((post) => (
+                            <li key={post.id} className='mt-2'>
+                                <h3 className='font-bold'>{post.title}</h3>
+                                <h4>{post.updatedAt}</h4>
+                                <p>{post.description}</p>
+                            </li>
+                        ))}
+                    </ul> : <h3>hold tight, fetching your drafts</h3>
+                }
+
             </div>
 
             {/* published post */}
-            <div>
-                <ul>
-                    <h2>Published Posts</h2>
-                    {publishedPosts.map((post) => (
-                        <li key={post.id}>
-                            <h3>{post.title}</h3>
-                            <h4>{post.last_updated}</h4>
-                            <p>{post.description}</p>
-                        </li>
-                    ))}
-                </ul>
-            </div>
+
         </div>
     )
 }
 
-export default Myposts
+export default MyPosts

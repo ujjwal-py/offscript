@@ -2,7 +2,7 @@ export type User = {
     id: string,
     name: string,
     email: string,
-    joined: string
+    createdAt: string
 }
 
 
@@ -11,5 +11,13 @@ export type UserPost = {
     title: string,
     description?: string,
     published: boolean,
-    last_updated: string,
+    updatedAt: string,
+}
+
+
+export type AuthBody = {
+    user: User | null,
+    login: () => Promise<void>,
+    logout: () => Promise<void>,
+    loading: boolean
 }

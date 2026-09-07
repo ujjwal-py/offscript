@@ -5,7 +5,9 @@ import { UnauthorizedError } from "../../../errors/CustomErrors";
 
 
 export const createPost = async (req: Request<{}, any, NewPostBody>, res: Response) => {
-    const { title, description } = req.body;
+    const { title, description, published } = req.body;
+    console.log("Hi")
+    console.log(req.body)
     const authorId = req.user?.user_id;
     if (!authorId) {
         throw new UnauthorizedError();
@@ -14,6 +16,7 @@ export const createPost = async (req: Request<{}, any, NewPostBody>, res: Respon
         data: {
             title,
             description,
+            published,
             authorId
         }
     })
@@ -64,11 +67,29 @@ export const getAllPosts = async (req: Request, res: Response) => {
     res.status(200).json(posts);
 }
 
-export const getUserPosts = async (req: Request, res: Response) => {
+export const userDraftPosts = async (req: Request, res: Response) => {
     const authorId = req.user?.user_id;
     const posts = await prisma.posts.findMany({
         where: {
-            authorId: authorId
+            authorId: authorId,
+            published: false
+        },
+        select: {
+            id: true,
+            title: true,
+            description: true,
+            published: true,
+            updatedAt: true,
+        }
+    });
+    res.status(200).json(posts);
+}
+export const userPublishedPosts = async (req: Request, res: Response) => {
+    const authorId = req.user?.user_id;
+    const posts = await prisma.posts.findMany({
+        where: {
+            authorId: authorId,
+            published: true
         },
         select: {
             id: true,

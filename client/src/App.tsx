@@ -2,8 +2,9 @@ import { Route, Routes } from 'react-router-dom'
 import Home from './pages/Home';
 import Sign from './pages/Sign';
 import Navbar from './components/Navbar';
-import Myposts from './pages/Myposts';
+import MyPosts from './pages/MyPosts';
 import Profile from './pages/Profile';
+import Protected from './components/Protected';
 
 function App() {
   return (
@@ -13,9 +14,10 @@ function App() {
       <Routes>
         <Route path='/home' element={<Home />} />
         <Route path='/auth' element={<Sign />} />
-        <Route path='/my-posts' element={<Myposts />} />
-        <Route path='/profile' element={<Profile />} />
-
+        <Route element={<Protected />}>
+          <Route path='/my-posts' element={<MyPosts />} />
+          <Route path='/profile' element={<Profile />} />
+        </Route>
       </Routes>
 
 
