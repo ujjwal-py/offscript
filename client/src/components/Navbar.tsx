@@ -1,17 +1,29 @@
 import { Link } from 'react-router-dom'
+import { Box } from '@chakra-ui/react'
 
 function Navbar() {
     // const navigate = useNavigate();
     return (
-        <div className='flex justify-between font-tech bg-blue-950 text-2xl rounded-lg  border-blue-400  text-white  p-2'>
-            <div className='flex  gap-12'>
-                <Link to="/home">Home</Link>
-                <Link to="/my-posts">Create </Link>
-            </div>
-            <div>
+        <Box bg="blueviolet"
+            width="100%"
+            height="12"
+            padding="4"
+            color="white"
+            borderWidth="1px"
+            borderColor="blue.500"
+            borderRadius="md">
+
+            <div className='flex justify-between'>
+                <div className='flex mt-4 gap-8 '>
+                    <Link to="/home">Home</Link>
+                    <Link to="/my-posts">Create</Link>
+                </div>
                 <Link to="/profile">Profile</Link>
+
             </div>
-        </div>
+
+
+        </Box>
     )
 }
 

@@ -4,6 +4,7 @@ import "dotenv/config"
 import cookieParser from 'cookie-parser';
 import { errorHandler } from "./middlewares/errorHandler";
 import cors from "cors"
+import path from "path"
 
 
 
@@ -17,7 +18,7 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 app.get("/", (req: Request, res: Response) => {
     res.send("Hello World");
 })

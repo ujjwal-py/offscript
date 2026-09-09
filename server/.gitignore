@@ -17,6 +17,9 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+#uploaded files
+uploads/
+
 # Build / runtime output
 .dist/
 dist/

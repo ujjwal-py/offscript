@@ -6,7 +6,7 @@ import useFetch from '../hooks/useFetch';
 type newPost = {
     title: string,
     description?: string,
-    published: boolean
+    published: "draft" | "publish"
 }
 
 type Prop = {
@@ -17,34 +17,37 @@ function NewPost(props: Prop) {
     const [data, setData] = useState<newPost>({
         title: "",
         description: "",
-        published: false
+        published: "draft"
     });
+    const [image, setImage] = useState<File | null>(null);
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        if (name === "published") {
-            setData((prev) => ({
-                ...prev,
-                published: value === "publish"
-            }))
-        }
-        else {
-            setData((prev) => ({
-                ...prev,
-                [name]: value,
-            }))
-        }
+
+        setData((prev) => ({
+            ...prev,
+            [name]: value,
+        }))
+
     }
 
     const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
+        const formData = new FormData();
+        formData.append("title", data.title);
+        formData.append("published", data.published);
+
+        if (data.description) {
+            formData.append("description", data.description);
+        }
+        if (image) {
+            formData.append("image", image);
+        }
         try {
-            const postData = data;
-            console.log(postData);
-            const res = await api.post("/new-post", postData);
+            const res = await api.post("/new-post", formData);
             setData({
                 title: "",
                 description: "",
-                published: false
+                published: "draft"
             })
             console.log(res.data);
             props.setRefresh((prev) => !prev);
@@ -82,18 +85,25 @@ function NewPost(props: Prop) {
                     <input type='radio'
                         name='published'
                         value="draft"
-                        checked={data.published === false}
+                        checked={data.published === "draft"}
                         onChange={handleChange} />
                     <label>No</label>
                     <input type='radio'
                         name='published'
                         value="publish"
-                        checked={data.published === true}
+                        checked={data.published === "publish"}
                         onChange={handleChange} />
+                </div>
+                <div className='flex gap-6'>
+                    <label>Upload image</label>
+                    <input type='file'
+                        name='file'
+                        accept='image/*'
+                        onChange={(e) => setImage(e.target.files?.[0] ?? null)} />
                 </div>
                 <button type='submit'
                     className='bg-cyan-950 cursor-pointer' >
-                    {data.published ? "Publish Post" : "Save Draft"}
+                    {data.published === "publish" ? "Publish Post" : "Save Draft"}
                 </button>
             </form >
         </div>
@@ -108,6 +118,8 @@ function MyPosts() {
     useEffect(() => {
         refetch();
     }, [refresh]);
+    const BASE_URL = "http://localhost:3000"
+
 
 
     return (
@@ -123,8 +135,12 @@ function MyPosts() {
                     <ul className='p-2'>
                         {data?.map((post) => (
                             <li key={post.id} className='mt-2'>
-                                <h3 className='font-bold'>{post.title}</h3>
+                                <h3 className='font-bold text-3xl'>{post.title}</h3>
                                 <h4>{post.updatedAt}</h4>
+                                {post.imageUrl && <img
+                                    src={`${BASE_URL}${post.imageUrl}`}
+                                    alt={post.title}
+                                    className="w-full h-48 object-cover rounded-md" />}
                                 <p>{post.description}</p>
                             </li>
                         ))}

@@ -6,20 +6,21 @@ import { UnauthorizedError } from "../../../errors/CustomErrors";
 
 export const createPost = async (req: Request<{}, any, NewPostBody>, res: Response) => {
     const { title, description, published } = req.body;
-    console.log("Hi")
-    console.log(req.body)
     const authorId = req.user?.user_id;
     if (!authorId) {
         throw new UnauthorizedError();
     }
+    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
     const newPost = await prisma.posts.create({
         data: {
             title,
             description,
             published,
-            authorId
+            authorId,
+            imageUrl
         }
     })
+    console.log(newPost);
     res.status(200).json(newPost)
 };
 
@@ -56,6 +57,7 @@ export const getAllPosts = async (req: Request, res: Response) => {
             id: true,
             title: true,
             description: true,
+            imageUrl: true,
             author: {
                 select: {
                     name: true,

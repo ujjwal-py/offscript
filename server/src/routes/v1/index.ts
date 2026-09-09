@@ -5,6 +5,7 @@ import { authenticate } from "../../middlewares/auth";
 import { validate } from "../../middlewares/validate";
 import { createPostSchema, updatePostSchema } from "../../schemas/post.schema";
 import { UserSchema } from "../../schemas/user.schema";
+import { upload } from "../../middlewares/upload";
 
 const v1 = express.Router()
 
@@ -17,7 +18,7 @@ v1.post("/logout", authenticate, logout);
 
 
 // post routes
-v1.post("/new-post", authenticate, validate(createPostSchema), createPost)
+v1.post("/new-post", authenticate, upload.single("image"), validate(createPostSchema), createPost)
 v1.get("/posts", getAllPosts)
 v1.get("/drafts", authenticate, userDraftPosts)
 v1.get("/published", authenticate, userPublishedPosts)

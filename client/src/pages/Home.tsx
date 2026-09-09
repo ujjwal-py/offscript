@@ -1,31 +1,22 @@
+import PostCard from '@/components/PostCard';
 import useFetch from '../hooks/useFetch';
-
-type Author = {
-    email: string,
-    name?: string,
-}
-
-type Post = {
-    id: number,
-    title: string,
-    description?: string,
-    author: Author
-}
+import type { Post } from '@/types';
 
 
 function Home() {
     const { data, loading } = useFetch<Post[]>("/posts");
+    console.log(data);
+
+
 
     return (
         <div>
             <h1 className='text-4xl text-black'>Top Posts</h1>
             {!loading ? <ul>
                 {data?.map((post) => (
-                    <li key={post.id}>
-                        <h2>{post.title}</h2>
-                        <h3>{post.author.name} - {post.author.email}</h3>
-                        <p>{post.description}</p>
-                    </li>
+
+                    <PostCard key={post.id} post={post} />
+
                 ))}
             </ul>
                 :

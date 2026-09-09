@@ -12,6 +12,20 @@ export type UserPost = {
     description?: string,
     published: boolean,
     updatedAt: string,
+    imageUrl: string | null
+}
+
+type Author = {
+    email: string,
+    name?: string,
+}
+
+export type Post = {
+    id: number,
+    title: string,
+    description?: string,
+    imageUrl: string | null,
+    author: Author
 }
 
 
