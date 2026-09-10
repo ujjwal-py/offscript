@@ -28,6 +28,9 @@ export type Post = {
     author: Author
 }
 
+export type PostCardProps = {
+    post: Post
+}
 
 export type AuthBody = {
     user: User | null,
@@ -35,3 +38,4 @@ export type AuthBody = {
     logout: () => Promise<void>,
     loading: boolean
 }
+

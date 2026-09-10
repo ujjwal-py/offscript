@@ -50,7 +50,7 @@ function Sign() {
     }
     useEffect(() => {
         if (user) {
-            navigate("/profile");
+            navigate("/home");
         }
     }, [user])
     return (

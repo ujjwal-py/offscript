@@ -22,5 +22,5 @@ v1.post("/new-post", authenticate, upload.single("image"), validate(createPostSc
 v1.get("/posts", getAllPosts)
 v1.get("/drafts", authenticate, userDraftPosts)
 v1.get("/published", authenticate, userPublishedPosts)
-v1.put("/update-post/:id", authenticate, validate(updatePostSchema), editPost)
+v1.put("/update-post/:id", authenticate, upload.single("image"), validate(updatePostSchema), editPost)
 export default v1;

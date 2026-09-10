@@ -12,7 +12,7 @@ function Home() {
     return (
         <div>
             <h1 className='text-4xl text-black'>Top Posts</h1>
-            {!loading ? <ul>
+            {!loading ? <ul className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
                 {data?.map((post) => (
 
                     <PostCard key={post.id} post={post} />
