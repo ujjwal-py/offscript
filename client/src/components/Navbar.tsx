@@ -1,17 +1,18 @@
 import { Link } from 'react-router-dom'
-import { Box } from '@chakra-ui/react'
+import { Box, Card } from '@chakra-ui/react'
 
 function Navbar() {
     // const navigate = useNavigate();
     return (
-        <Box
-            bg="gray.900"
+        <Card.Root
+
             maxWidth="full"
             height="12"
             padding="2"
             color="white"
-            borderWidth="2px"
+            borderWidth="1px"
             borderColor="gray.200"
+            boxShadow="xl"
             fontSize="xl"
             borderRadius="md"
             margin="2">
@@ -27,7 +28,7 @@ function Navbar() {
             </div>
 
 
-        </Box>
+        </Card.Root>
     )
 }
 

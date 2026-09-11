@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { prisma } from "../../../lib/prisma";
 import { NewPostBody, UpdatePostBody } from "../../../schemas/post.schema";
-import { UnauthorizedError } from "../../../errors/CustomErrors";
+import { CustomError, UnauthorizedError } from "../../../errors/CustomErrors";
 
 
 export const createPost = async (req: Request<{}, any, NewPostBody>, res: Response) => {
@@ -31,6 +31,8 @@ export const editPost = async (req: Request<{ id: string }, any, UpdatePostBody>
     }
     const id = parseInt(req.params.id, 10);
     const { title, description, published } = req.body;
+    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+
 
 
     const post = await prisma.posts.update({
@@ -42,6 +44,7 @@ export const editPost = async (req: Request<{ id: string }, any, UpdatePostBody>
             ...(title !== undefined && { title }),
             ...(description !== undefined && { description }),
             ...(published !== undefined && { published }),
+            ...(imageUrl !== null && { imageUrl }),
         }
     });
 
@@ -82,6 +85,7 @@ export const userDraftPosts = async (req: Request, res: Response) => {
             description: true,
             published: true,
             updatedAt: true,
+            imageUrl: true,
         }
     });
     res.status(200).json(posts);
@@ -99,8 +103,24 @@ export const userPublishedPosts = async (req: Request, res: Response) => {
             description: true,
             published: true,
             updatedAt: true,
+            imageUrl: true,
         }
     });
     res.status(200).json(posts);
+}
+
+export const deletePost = async (req: Request<{ id: string }>, res: Response) => {
+    const authorId = req.user?.user_id;
+    if (!authorId) {
+        throw new UnauthorizedError();
+    }
+    const id = parseInt(req.params.id, 10);
+    const post = await prisma.posts.delete({
+        where: {
+            id,
+            authorId,
+        }
+    });
+    res.status(200).json({ message: "Post deleted successfully" });
 }
 

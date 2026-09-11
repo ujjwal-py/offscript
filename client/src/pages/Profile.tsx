@@ -1,6 +1,25 @@
+import PublishedPostCard from '@/components/PublishedPostCard';
 import { useAuth } from '../hooks/useAuth';
+import { Text, Image, Card, Stack, Button, AbsoluteCenter, Flex } from '@chakra-ui/react'
 import useFetch from '../hooks/useFetch';
 import type { UserPost } from '../types';
+import UserPostDialogue, { type DialogContextProps } from '@/components/UserPostDialogue';
+const BASE_URL = "http://localhost:3000";
+
+
+function ViewPostCard({ post }: DialogContextProps<UserPost>) {
+  return (
+    <>
+      <Card.Root maxWidth="full" overflow="hidden" borderWidth="2px" borderRadius="md" padding='2' borderColor="grey.300" boxShadow="md" >
+        <Stack alignItems="center" justifyContent="center" marginTop="4" gap="8">
+          <Text fontSize="4xl" fontWeight="bold">{post.title}</Text>
+          {post.imageUrl && <Image src={`${BASE_URL}${post.imageUrl}`} alt={post.title} />}
+          <Text fontSize="md">{post.description}</Text>
+        </Stack >
+      </Card.Root >
+    </>
+  )
+}
 
 function Profile() {
   const { user, logout } = useAuth();
@@ -8,22 +27,21 @@ function Profile() {
 
   return (
     <>
-      <div>
-        <h2>User info</h2>
-        <h3>{user?.name}</h3>
-        <button onClick={logout} className='border-2 border-black text-2xl bg-blue-900 text-white'>logout</button>
-        {loading === false && data ?
-          <ul className='p-2'>
-            {data.map((post) => (
-              <li key={post.id} className='mt-2'>
-                <h3 className='font-bold'>{post.title}</h3>
-                <h4>{post.updatedAt}</h4>
-                <p>{post.description}</p>
-              </li>
-            ))}
-          </ul> : <h3>hold tight, fetching your posts</h3>
-        }
-      </div>
+      <Flex alignItems="center" justifyContent="space-between" padding="4" margin="2" borderWidth="1px" borderColor="gray.200">
+        <Text textAlign="center" fontSize="2xl" fontWeight="bold">Welcome, {user?.name || "user"}</Text>
+        <Button variant="outline" onClick={logout}>Logout</Button>
+      </Flex>
+
+      <Text marginLeft="2" textAlign="center" fontWeight="semibold" fontSize="2xl">Your Published Posts</Text>
+
+      {loading === false && data ?
+        <ul className='p-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+          {data.map((post) => (
+            <UserPostDialogue key={post.id} post={post}
+              usage="view" trigger={<PublishedPostCard post={post} usage="view" />} DialogContent={ViewPostCard} />
+          ))}
+        </ul> : <h3>hold tight, fetching your posts</h3>
+      }
     </>
   )
 }

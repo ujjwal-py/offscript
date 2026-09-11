@@ -4,7 +4,7 @@ import useFetch from '../hooks/useFetch';
 import { Text } from '@chakra-ui/react';
 import DraftedPostCard from '@/components/DraftedPostCard';
 import PostFormCard from '@/components/PostFormCard';
-import PostDialogue from '@/components/PostDialogue';
+import UserPostDialogue from '@/components/UserPostDialogue';
 
 // type newPost = {
 //     title: string,
@@ -23,6 +23,7 @@ function MyPosts() {
         imageUrl: null
     }
     const { data, loading, refetch } = useFetch<UserPost[]>("/drafts");
+
     const [refresh, setRefresh] = useState<boolean>(false);
     // console.log(loading);
     useEffect(() => {
@@ -43,9 +44,14 @@ function MyPosts() {
                 {loading === false ?
                     <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {data?.map((post) => (
-                            <PostDialogue key={post.id} post={post}>
-                                <DraftedPostCard post={post} />
-                            </PostDialogue>
+                            <UserPostDialogue key={post.id}
+                                trigger={<DraftedPostCard post={post} />}
+                                usage="update"
+                                post={post} // infers the type generic 
+                                setRefresh={setRefresh}
+                                DialogContent={PostFormCard}
+                            >
+                            </UserPostDialogue>
                         ))}
                     </ul> : <h3 color="white">hold tight, fetching your drafts</h3>
                 }

@@ -1,6 +1,8 @@
 import PostCard from '@/components/PostCard';
 import useFetch from '../hooks/useFetch';
 import type { Post } from '@/types';
+import UserPostDialogue from '@/components/UserPostDialogue';
+import ViewPostCard from '@/components/ViewPostCard';
 
 
 function Home() {
@@ -15,7 +17,9 @@ function Home() {
             {!loading ? <ul className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
                 {data?.map((post) => (
 
-                    <PostCard key={post.id} post={post} />
+                    <UserPostDialogue post={post}
+                        trigger={<PostCard post={post} />}
+                        DialogContent={ViewPostCard} usage="view" />
 
                 ))}
             </ul>

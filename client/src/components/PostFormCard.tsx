@@ -2,27 +2,23 @@ import type { UserPost } from "@/types";
 import {
     Card, Input, Stack, Field,
     Textarea, FileUpload, RadioCard,
-    HStack, Button
+    HStack, Button, Image
 } from "@chakra-ui/react"
 import { useState } from "react"
 import { HiUpload } from 'react-icons/hi'
 import { api } from "@/Api";
 import axios from "axios";
+import type { DialogContextProps } from "@/components/UserPostDialogue"
 
-type PostFromCardProps = {
-    post: UserPost,
-    setRefresh?: React.Dispatch<React.SetStateAction<boolean>>,
-    usage: "create" | "update"
-}
+type PostFromCardProps = DialogContextProps<UserPost>
 
-type ApiValidationError = {
-    message: string;
-    Errors?: string;
-};
+const BASE_URL = "http://localhost:3000";
 
-function PostFormCard({ post, setRefresh, usage }: PostFromCardProps) {
+
+function PostFormCard({ post, setRefresh, usage, setOpen }: PostFromCardProps) {
     const [image, setImage] = useState<File | null>(null);
     const [data, setData] = useState<UserPost>(post);
+    console.log("PostFormCard data:", data);
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setData((prev) => ({
@@ -51,6 +47,10 @@ function PostFormCard({ post, setRefresh, usage }: PostFromCardProps) {
                 res = await api.put(`/update-post/${data.id}`, formData);
             }
             console.log(res.data);
+            if (setOpen) {
+                console.log("Closing dialog");
+                setOpen(false);
+            }
             if (setRefresh) {
                 setRefresh((prev) => !prev);
             }
@@ -65,12 +65,25 @@ function PostFormCard({ post, setRefresh, usage }: PostFromCardProps) {
 
         }
     }
+    const handleDelete = async () => {
+        try {
+            const res = await api.delete(`/delete-post/${data.id}`);
+            console.log(res.data);
+            if (setOpen) {
+                console.log("Closing dialog");
+                setOpen(false);
+            }
+            if (setRefresh) {
+                setRefresh((prev) => !prev);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
     return (
         <Card.Root maxWidth="full" margin="2" borderWidth="1px" borderColor="gray.200" borderRadius="md" boxShadow="md">
             <Card.Header>
-                <Card.Title>{usage === "create" ? "Create" : "Update"}  Post</Card.Title>
-                <Card.Description>You can create a new post here. Fill in the details and submit
-                </Card.Description>
+                <Card.Title textAlign="center">{usage === "create" ? "Create" : "Update"}  Post</Card.Title>
             </Card.Header>
             <Card.Body>
                 <Stack gap="3" w="full">
@@ -93,18 +106,21 @@ function PostFormCard({ post, setRefresh, usage }: PostFromCardProps) {
                     </Field.Root>
                     <Field.Root>
                         <Field.Label>Upload an Image for Post</Field.Label>
-                        <FileUpload.Root accept={["image/*"]}
-                            onFileChange={(details) => { setImage(details.acceptedFiles[0] ?? null) }}>
-                            <FileUpload.HiddenInput />
-                            <FileUpload.Trigger asChild>
-                                <Button variant="outline" size="sm">
-                                    <HiUpload /> Upload file
-                                </Button>
-                            </FileUpload.Trigger>
-                            <FileUpload.List />
-                        </FileUpload.Root>
+                        <HStack align="stretch" gap="2">
+                            <FileUpload.Root accept={["image/*"]}
+                                onFileChange={(e) => { setImage(e.acceptedFiles[0] ?? null) }}>
+                                <FileUpload.HiddenInput />
+                                <FileUpload.Trigger asChild>
+                                    <Button variant="outline" size="sm">
+                                        <HiUpload /> Upload file
+                                    </Button>
+                                </FileUpload.Trigger>
+                                <FileUpload.List />
+                            </FileUpload.Root>
+                            {data.imageUrl && <Image width="12" height="12" src={`${BASE_URL}${data.imageUrl}`} alt="Selected file" />}
+                        </HStack>
                     </Field.Root>
-                    <Field.Root>
+                    <Field.Root >
                         <Field.Label>Save as Draft?</Field.Label>
                         <RadioCard.Root value={data.published ? "publish" : "draft"}
                             onValueChange={(e) => {
@@ -115,7 +131,7 @@ function PostFormCard({ post, setRefresh, usage }: PostFromCardProps) {
                                 }));
                             }}
                             name="published">
-                            <HStack align="strech">
+                            <HStack align="strech" justifyContent="space-between" gap="2">
                                 <RadioCard.Item value="draft" >
                                     <RadioCard.ItemHiddenInput />
                                     <RadioCard.ItemControl>
@@ -133,11 +149,11 @@ function PostFormCard({ post, setRefresh, usage }: PostFromCardProps) {
                             </HStack>
                         </RadioCard.Root>
                     </Field.Root>
-
                 </Stack>
             </Card.Body>
             <Card.Footer justifyContent="flex-end">
                 <Button onClick={handleSubmit} variant="solid">{data.published ? "Publish" : "Draft"}</Button>
+                {usage === "update" && <Button variant="outline" color="red.400" onClick={handleDelete}>Delete</Button>}
             </Card.Footer>
         </Card.Root >
     )

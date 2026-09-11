@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { Button, Card, Field, Input, Stack, Text } from '@chakra-ui/react'
 import { api } from '../Api'
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
@@ -53,52 +54,75 @@ function Sign() {
             navigate("/home");
         }
     }, [user])
+    const isSignUp = mode === "signup";
+
     return (
-        <div className='m-2'>
-            <form onSubmit={handleSubmit}
-                className='grid grid-rows-4 gap-4 p-2 bg-cyan-600 text-white text-2xl '>
-                {mode === "signup" &&
-                    <div className='grid grid-cols-2 '>
-                        <label>Name</label>
-                        <input type='text'
-                            name="name"
-                            value={formData.name}
-                            placeholder='Enter your name'
-                            onChange={handleChange}
-                            className='bg-cyan-950' />
-                    </div>
-                }
-                <div className='grid grid-cols-2 '>
-                    <label>Email</label>
-                    <input type='text'
-                        name="email"
-                        value={formData.email}
-                        placeholder='Enter your email'
-                        onChange={handleChange}
-                        className='bg-cyan-950' />
-                </div>
-                <div className='grid grid-cols-2 '>
-                    <label>Password</label>
-                    <input type='password'
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        placeholder='Enter your password'
-                        className='bg-cyan-950' />
-                </div >
-                <button type='submit'
-                    className='bg-cyan-950 cursor-pointer' >
-                    Sign in
-                </button>
+        <Card.Root maxWidth="md" margin="4" mx="auto" borderWidth="1px" borderColor="gray.200" borderRadius="md" boxShadow="md">
+            <Card.Header>
+                <Card.Title textAlign="center">
+                    {isSignUp ? "Create an account" : "Welcome back"}
+                </Card.Title>
+                <Card.Description textAlign="center">
+                    {isSignUp ? "Sign up to get started" : "Sign in to continue"}
+                </Card.Description>
+            </Card.Header>
 
+            <form onSubmit={handleSubmit}>
+                <Card.Body>
+                    <Stack gap="4" w="full">
+                        {isSignUp &&
+                            <Field.Root required>
+                                <Field.Label>Name</Field.Label>
+                                <Input
+                                    type="text"
+                                    name="name"
+                                    value={formData.name}
+                                    placeholder="Enter your name"
+                                    onChange={handleChange}
+                                />
+                            </Field.Root>
+                        }
 
-            </form >
-            {mode === "signup" ?
-                <button className='text-2xl' onClick={() => setMode("signin")}>Already registered? Login here</button>
-                :
-                <button className='text-2xl' onClick={() => setMode("signup")}>Register a new account here</button>
-            }
-        </div >
+                        <Field.Root required>
+                            <Field.Label>Email</Field.Label>
+                            <Input
+                                type="email"
+                                name="email"
+                                value={formData.email}
+                                placeholder="Enter your email"
+                                onChange={handleChange}
+                            />
+                        </Field.Root>
+
+                        <Field.Root required>
+                            <Field.Label>Password</Field.Label>
+                            <Input
+                                type="password"
+                                name="password"
+                                value={formData.password}
+                                placeholder="Enter your password"
+                                onChange={handleChange}
+                            />
+                        </Field.Root>
+                    </Stack>
+                </Card.Body>
+
+                <Card.Footer flexDirection="column" gap="3">
+                    <Button type="submit" width="full">
+                        {isSignUp ? "Sign up" : "Sign in"}
+                    </Button>
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={() => setMode(isSignUp ? "signin" : "signup")}
+                    >
+                        <Text>
+                            {isSignUp ? "Already registered? Sign in" : "Need an account? Sign up"}
+                        </Text>
+                    </Button>
+                </Card.Footer>
+            </form>
+        </Card.Root>
     )
 }
 
