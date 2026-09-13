@@ -10,17 +10,15 @@ function App() {
   return (
     <>
       <Navbar />
-
       <Routes>
         <Route path='/home' element={<Home />} />
+        <Route path='/' element={<Home />} />
         <Route path='/auth' element={<Sign />} />
         <Route element={<Protected />}>
           <Route path='/my-posts' element={<MyPosts />} />
           <Route path='/profile' element={<Profile />} />
         </Route>
       </Routes>
-
-
     </>
   )
 }

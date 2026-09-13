@@ -9,13 +9,13 @@ import { HiUpload } from 'react-icons/hi'
 import { api } from "@/Api";
 import axios from "axios";
 import type { DialogContextProps } from "@/components/UserPostDialogue"
+import { BASE_URL } from "@/config"
 
 type PostFromCardProps = DialogContextProps<UserPost>
 
-const BASE_URL = "http://localhost:3000";
 
 
-function PostFormCard({ post, setRefresh, usage, setOpen }: PostFromCardProps) {
+function PostFormCard({ post, refetch, usage, setOpen }: PostFromCardProps) {
     const [image, setImage] = useState<File | null>(null);
     const [data, setData] = useState<UserPost>(post);
     console.log("PostFormCard data:", data);
@@ -51,8 +51,9 @@ function PostFormCard({ post, setRefresh, usage, setOpen }: PostFromCardProps) {
                 console.log("Closing dialog");
                 setOpen(false);
             }
-            if (setRefresh) {
-                setRefresh((prev) => !prev);
+            // call the refetch function to refresh the data
+            if (refetch) {
+                refetch();
             }
         } catch (err) {
             if (axios.isAxiosError(err)) {
@@ -73,15 +74,19 @@ function PostFormCard({ post, setRefresh, usage, setOpen }: PostFromCardProps) {
                 console.log("Closing dialog");
                 setOpen(false);
             }
-            if (setRefresh) {
-                setRefresh((prev) => !prev);
-            }
         } catch (err) {
             console.log(err);
+        } finally {
+            if (refetch) {
+                refetch();
+            }
         }
     }
     return (
-        <Card.Root maxWidth="full" margin="2" borderWidth="1px" borderColor="gray.200" borderRadius="md" boxShadow="md">
+        <Card.Root maxWidth="100vw"
+            margin="2" borderWidth="1px"
+            borderColor="gray.200" borderRadius="md"
+            boxShadow="md" overflow="hidden">
             <Card.Header>
                 <Card.Title textAlign="center">{usage === "create" ? "Create" : "Update"}  Post</Card.Title>
             </Card.Header>
@@ -106,7 +111,12 @@ function PostFormCard({ post, setRefresh, usage, setOpen }: PostFromCardProps) {
                     </Field.Root>
                     <Field.Root>
                         <Field.Label>Upload an Image for Post</Field.Label>
-                        <HStack align="stretch" gap="2">
+                        <HStack
+                            width="full"
+                            align="stretch"
+                            flexWrap="wrap"
+                            gap="2"
+                        >
                             <FileUpload.Root accept={["image/*"]}
                                 onFileChange={(e) => { setImage(e.acceptedFiles[0] ?? null) }}>
                                 <FileUpload.HiddenInput />
@@ -131,7 +141,13 @@ function PostFormCard({ post, setRefresh, usage, setOpen }: PostFromCardProps) {
                                 }));
                             }}
                             name="published">
-                            <HStack align="strech" justifyContent="space-between" gap="2">
+                            <HStack
+                                width="full"
+                                align="stretch"
+                                flexWrap="wrap"
+                                justifyContent="space-between"
+                                gap="2"
+                            >
                                 <RadioCard.Item value="draft" >
                                     <RadioCard.ItemHiddenInput />
                                     <RadioCard.ItemControl>
@@ -151,7 +167,7 @@ function PostFormCard({ post, setRefresh, usage, setOpen }: PostFromCardProps) {
                     </Field.Root>
                 </Stack>
             </Card.Body>
-            <Card.Footer justifyContent="flex-end">
+            <Card.Footer flexWrap="wrap" justifyContent="flex-end" gap="2">
                 <Button onClick={handleSubmit} variant="solid">{data.published ? "Publish" : "Draft"}</Button>
                 {usage === "update" && <Button variant="outline" color="red.400" onClick={handleDelete}>Delete</Button>}
             </Card.Footer>
@@ -160,4 +176,5 @@ function PostFormCard({ post, setRefresh, usage, setOpen }: PostFromCardProps) {
 }
 
 
-export default PostFormCard
+
+export default PostFormCard;

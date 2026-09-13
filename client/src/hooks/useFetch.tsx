@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { api } from '../Api';
+import type { ParamBody } from '../types';
 
 
-
-function useFetch<T>(url: string) {
+function useFetch<T>(url: string, params?: ParamBody) {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<unknown>();
@@ -11,7 +11,7 @@ function useFetch<T>(url: string) {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await api.get<T>(url);
+      const response = await api.get<T>(url, { params: params });
       setData(response.data);
     } catch (err) {
       console.log(err);
@@ -23,7 +23,7 @@ function useFetch<T>(url: string) {
 
   useEffect(() => {
     fetchData();
-  }, [])
+  }, [url, params?.page, params?.limit, params?.order, params?.sort_by]);
 
   return ({ data, loading, error, refetch: fetchData })
 }

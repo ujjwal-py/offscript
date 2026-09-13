@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { prisma } from "../../../lib/prisma";
 import { NewPostBody, UpdatePostBody } from "../../../schemas/post.schema";
 import { CustomError, UnauthorizedError } from "../../../errors/CustomErrors";
+import { id } from "zod/locales";
 
 
 export const createPost = async (req: Request<{}, any, NewPostBody>, res: Response) => {
@@ -20,7 +21,6 @@ export const createPost = async (req: Request<{}, any, NewPostBody>, res: Respon
             imageUrl
         }
     })
-    console.log(newPost);
     res.status(200).json(newPost)
 };
 
@@ -52,10 +52,19 @@ export const editPost = async (req: Request<{ id: string }, any, UpdatePostBody>
 }
 
 export const getAllPosts = async (req: Request, res: Response) => {
+    const page = Number(req.query.page) || 1;
+    const limit = 12;
+    const offset = (page - 1) * limit;
+    const order = req.query.order === "asc" ? "asc" : "desc";
+    const sortBy = req.query.sort_by === "updatedAt" ? "updatedAt" : "title";
+
     const posts = await prisma.posts.findMany({
         where: {
             published: true
         },
+        skip: offset,
+        take: limit,
+        orderBy: { [sortBy]: order },
         select: {
             id: true,
             title: true,

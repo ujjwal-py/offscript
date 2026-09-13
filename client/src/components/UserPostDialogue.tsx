@@ -11,18 +11,18 @@ export type DialogContextProps<T> = { // generic here telling the type for post
     post: T; // post data to be used
     usage: "create" | "update" | "view"; // tells the type of component or dialogue 
     setOpen?: React.Dispatch<React.SetStateAction<boolean>>; // shared state to open/close the dialogue
-    setRefresh?: React.Dispatch<React.SetStateAction<boolean>>; // shared state by the grand parent to refresh data
+    refetch?: () => Promise<void>; // shared state by the grand parent to refresh data
 };
 
 type PostDialogueProps<T> = {
     post: T;
     DialogContent: React.ComponentType<DialogContextProps<T>>;
     usage: "create" | "update" | "view";
-    setRefresh?: React.Dispatch<React.SetStateAction<boolean>>;
+    refetch(): Promise<void>; // shared state by the grand parent to refresh data
     trigger: React.ReactNode; // the component that will trigger the dialogue to open
 };
 
-function UserPostDialogue<T>({ post, trigger, setRefresh, DialogContent, usage }: PostDialogueProps<T>) {
+function UserPostDialogue<T>({ post, trigger, refetch, DialogContent, usage }: PostDialogueProps<T>) {
     const [open, setOpen] = useState(false)
     const [selectedPost, setSelectedPost] = useState<T | null>(null)
     useEffect(() => {
@@ -31,9 +31,9 @@ function UserPostDialogue<T>({ post, trigger, setRefresh, DialogContent, usage }
 
 
     return (
-        <Dialog.Root lazyMount size={usage === "view" ? "full" : "cover"}
+        <Dialog.Root lazyMount size="full"
             placement="center"
-            scrollBehavior={usage === "view" ? "inside" : "outside"} // scroll for view and no scroll for create and update
+            scrollBehavior="inside"
             motionPreset="slide-in-bottom" open={open}
             onOpenChange={(e) => setOpen(e.open)}>
             <Dialog.Trigger asChild>
@@ -42,13 +42,21 @@ function UserPostDialogue<T>({ post, trigger, setRefresh, DialogContent, usage }
             <Portal>
                 <Dialog.Backdrop />
                 <Dialog.Positioner>
-                    <Dialog.Content>
+                    <Dialog.Content
+                        width="100vw"
+                        maxW="100vw"
+                        height="100vh"
+                        maxH="100vh"
+                        borderRadius="0"
+                        overflow="hidden"
+                        bg="gray.600"
+                    >
                         <Dialog.Header>
                             <Dialog.Title></Dialog.Title>
                         </Dialog.Header>
-                        <Dialog.Body>
+                        <Dialog.Body px={{ base: "3", md: "6" }} overflowY="auto">
                             {selectedPost ? <DialogContent post={selectedPost}
-                                setOpen={setOpen} usage={usage} setRefresh={setRefresh} />
+                                setOpen={setOpen} usage={usage} refetch={refetch} />
                                 : <p>Loading...</p>}
                         </Dialog.Body>
                         <Dialog.Footer>
@@ -63,9 +71,6 @@ function UserPostDialogue<T>({ post, trigger, setRefresh, DialogContent, usage }
         </Dialog.Root>
     )
 }
-
-
-
 
 
 

@@ -39,3 +39,10 @@ export type AuthBody = {
     loading: boolean
 }
 
+
+export type ParamBody = {
+    page?: number,
+    limit?: number,
+    order?: "asc" | "desc",
+    sort_by?: "createdAt" | "updatedAt" | "title"
+}

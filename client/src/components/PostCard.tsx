@@ -1,13 +1,14 @@
 import React from 'react'
 import { Card, Image, Stack, Text } from '@chakra-ui/react'
 import type { PostCardProps } from '@/types'
+import { BASE_URL } from "@/config"
 
 
 function PostCard({ post }: PostCardProps) {
-    const BASE_URL = "http://localhost:3000"
+
 
     return (
-        <Card.Root maxWidth="full" height="72" overflow="hidden" borderWidth="2px" margin="2" borderRadius="md" boxShadow="xl" borderColor="grey.300" boxShadowColor="white" _hover={{ borderColor: "white", cursor: "pointer" }} >
+        <Card.Root maxWidth="full" height="72" overflow="hidden" borderWidth="2px" margin="2" borderRadius="md" boxShadow="xl" borderColor="bg.muted" boxShadowColor="bg.subtle" _hover={{ borderColor: "bg.inverted", cursor: "pointer" }} >
             {post.imageUrl && <Image src={`${BASE_URL}${post.imageUrl}`} fit="cover" maxHeight="1/3" />}
             <Card.Body gap="2">
                 <Card.Title fontSize="2xl">{post.title}</Card.Title>

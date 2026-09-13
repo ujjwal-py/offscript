@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import type { UserPost } from '../types';
 import useFetch from '../hooks/useFetch';
 import { Text } from '@chakra-ui/react';
@@ -24,17 +23,14 @@ function MyPosts() {
     }
     const { data, loading, refetch } = useFetch<UserPost[]>("/drafts");
 
-    const [refresh, setRefresh] = useState<boolean>(false);
-    // console.log(loading);
-    useEffect(() => {
-        refetch();
-    }, [refresh]);
+
+
 
 
 
     return (
         <div>
-            <PostFormCard post={postData} setRefresh={setRefresh} usage="create" />
+            <PostFormCard post={postData} refetch={refetch} usage="create" />
 
             {/* display posts  */}
 
@@ -48,8 +44,9 @@ function MyPosts() {
                                 trigger={<DraftedPostCard post={post} />}
                                 usage="update"
                                 post={post} // infers the type generic 
-                                setRefresh={setRefresh}
+                                refetch={refetch}
                                 DialogContent={PostFormCard}
+
                             >
                             </UserPostDialogue>
                         ))}

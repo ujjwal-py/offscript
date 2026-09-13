@@ -1,22 +1,61 @@
-import React from 'react'
 import type { DialogContextProps } from "@/components/UserPostDialogue"
 import { Text, Image, Stack, Card } from '@chakra-ui/react'
 import type { Post } from '@/types';
-
-const BASE_URL = "http://localhost:3000";
+import { BASE_URL } from "@/config"
 
 function ViewPostCard({ post }: DialogContextProps<Post>) {
   return (
-    <>
-      <Card.Root maxWidth="full" overflow="hidden" borderWidth="2px" borderRadius="md" padding='2' borderColor="grey.300" boxShadow="md" >
-        <Stack alignItems="center" justifyContent="center" marginTop="4" gap="8">
-          <Text fontSize="4xl" fontWeight="bold">{post.title}</Text>
-          {post.author && <Text fontSize="md" fontWeight="semibold">{post.author.name || "user"} - {post.author.email}</Text>}
-          {post.imageUrl && <Image src={`${BASE_URL}${post.imageUrl}`} alt={post.title} />}
-          <Text fontSize="md">{post.description}</Text>
-        </Stack >
-      </Card.Root >
-    </>
+    <Card.Root
+      width="full"
+      maxW="full"
+      overflow="hidden"
+      borderWidth="2px"
+      bg="bg.panel"
+      borderRadius="md"
+      padding={{ base: "2", md: "4" }}
+      borderColor="bg.subtle"
+      boxShadow="md"
+    >
+      <Stack
+        width="full"
+        alignItems="center"
+        justifyContent="center"
+        marginTop={{ base: "2", md: "4" }}
+        gap={{ base: "3", md: "4" }}
+      >
+        <Text
+          width="full"
+          textAlign="center"
+          fontSize={{ base: "xl", md: "2xl" }}
+          fontWeight="bold"
+          overflowWrap="anywhere"
+        >
+          {post.title}
+        </Text>
+        <Text
+          width="full"
+          textAlign="center"
+          fontSize="md"
+          fontWeight="semibold"
+          overflowWrap="anywhere"
+        >
+          {post.author.name || "user"} - {post.author.email}
+        </Text>
+        {post.imageUrl && (
+          <Image
+            src={`${BASE_URL}${post.imageUrl}`}
+            alt={post.title}
+            width="full"
+            maxW="100%"
+            maxH={{ base: "35vh", md: "55vh" }}
+            objectFit="contain"
+          />
+        )}
+        <Text width="full" fontSize="md" overflowWrap="anywhere">
+          {post.description}
+        </Text>
+      </Stack>
+    </Card.Root>
   )
 }
 

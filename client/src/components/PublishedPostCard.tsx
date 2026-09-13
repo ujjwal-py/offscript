@@ -1,9 +1,8 @@
-import React from 'react'
 import { Card, HStack, Text, Image } from '@chakra-ui/react'
 
 import type { DialogContextProps } from "@/components/UserPostDialogue"
 import type { UserPost } from '@/types'
-const BASE_URL = "http://localhost:3000";
+import { BASE_URL } from "@/config"
 
 function PublishedPostCard({ post }: DialogContextProps<UserPost>) {
     return (
@@ -17,7 +16,7 @@ function PublishedPostCard({ post }: DialogContextProps<UserPost>) {
                     <Card.Title fontSize="lg">{post.title}</Card.Title>
                 </HStack>
             </Card.Body>
-            <Card.Footer gap="1">
+            <Card.Footer gap="1" justifyContent="space-between">
                 <Text fontSize="sm" color="gray.500">
                     Last updated -  {post.updatedAt.slice(0, 10)}
                 </Text>

@@ -1,13 +1,30 @@
 import PublishedPostCard from '@/components/PublishedPostCard';
 import { useAuth } from '../hooks/useAuth';
-import { Text, Image, Card, Stack, Button, AbsoluteCenter, Flex } from '@chakra-ui/react'
+import { Text, Image, Card, Stack, Button, Flex } from '@chakra-ui/react'
 import useFetch from '../hooks/useFetch';
 import type { UserPost } from '../types';
 import UserPostDialogue, { type DialogContextProps } from '@/components/UserPostDialogue';
+import { api } from '@/Api';
 const BASE_URL = "http://localhost:3000";
 
 
-function ViewPostCard({ post }: DialogContextProps<UserPost>) {
+function ViewPostCard({ post, setOpen, refetch }: DialogContextProps<UserPost>) {
+  const handleDelete = async () => {
+    try {
+      const res = await api.delete(`/delete-post/${post.id}`);
+      console.log(res.data);
+      if (setOpen) {
+        console.log("Closing dialog");
+        setOpen(false);
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      if (refetch) {
+        refetch();
+      }
+    }
+  }
   return (
     <>
       <Card.Root maxWidth="full" overflow="hidden" borderWidth="2px" borderRadius="md" padding='2' borderColor="grey.300" boxShadow="md" >
@@ -16,6 +33,9 @@ function ViewPostCard({ post }: DialogContextProps<UserPost>) {
           {post.imageUrl && <Image src={`${BASE_URL}${post.imageUrl}`} alt={post.title} />}
           <Text fontSize="md">{post.description}</Text>
         </Stack >
+        <Card.Footer justifyContent="flex-end">
+          <Button variant="outline" bg="red" onClick={handleDelete} >Delete</Button>
+        </Card.Footer>
       </Card.Root >
     </>
   )
@@ -23,13 +43,14 @@ function ViewPostCard({ post }: DialogContextProps<UserPost>) {
 
 function Profile() {
   const { user, logout } = useAuth();
-  const { data, loading } = useFetch<UserPost[]>("/published")
+  const { data, loading, refetch } = useFetch<UserPost[]>("/published")
+
 
   return (
     <>
       <Flex alignItems="center" justifyContent="space-between" padding="4" margin="2" borderWidth="1px" borderColor="gray.200">
         <Text textAlign="center" fontSize="2xl" fontWeight="bold">Welcome, {user?.name || "user"}</Text>
-        <Button variant="outline" onClick={logout}>Logout</Button>
+        <Button variant="outline" bg="red.solid" onClick={logout}>Logout</Button>
       </Flex>
 
       <Text marginLeft="2" textAlign="center" fontWeight="semibold" fontSize="2xl">Your Published Posts</Text>
@@ -38,9 +59,12 @@ function Profile() {
         <ul className='p-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
           {data.map((post) => (
             <UserPostDialogue key={post.id} post={post}
-              usage="view" trigger={<PublishedPostCard post={post} usage="view" />} DialogContent={ViewPostCard} />
+              usage="view" trigger={<PublishedPostCard post={post}
+                usage="view" refetch={refetch} />}
+              refetch={refetch}
+              DialogContent={ViewPostCard} />
           ))}
-        </ul> : <h3>hold tight, fetching your posts</h3>
+        </ul> : <h3>hold tight,fetching your posts</h3>
       }
     </>
   )
