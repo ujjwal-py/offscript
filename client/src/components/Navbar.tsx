@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Card, Flex, HStack, Text } from '@chakra-ui/react'
+import { Card, Flex, Text } from '@chakra-ui/react'
 
 function Navbar() {
     // const navigate = useNavigate();
@@ -23,16 +23,9 @@ function Navbar() {
                         <Link to="/home"><Text fontSize="xl" fontWeight="semibold" color="bg.inverted">Home</Text></Link>
                         <Link to="/my-posts"><Text fontSize="xl" fontWeight="semibold" color="bg.inverted">Create</Text></Link>
                     </Flex>
-
                     <Link to="/profile"><Text fontSize="xl" fontWeight="semibold" color="bg.inverted">Profile</Text></Link>
                 </Flex>
-
-
-
             </Card.Title>
-
-
-
         </Card.Root>
     )
 }

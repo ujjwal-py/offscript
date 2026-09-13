@@ -12,5 +12,10 @@ export const updatePostSchema = z.object({
     published: z.string().transform((val) => val === "publish").pipe(z.boolean()).optional()
 });
 
+export const likesSchema = z.object({
+    postId: z.number().int().positive("Post ID must be a positive integer")
+});
+
 export type NewPostBody = z.infer<typeof createPostSchema>;
 export type UpdatePostBody = z.infer<typeof updatePostSchema>;
+export type LikesBody = z.infer<typeof likesSchema>;

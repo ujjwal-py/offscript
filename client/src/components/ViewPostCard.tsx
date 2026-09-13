@@ -2,8 +2,9 @@ import type { DialogContextProps } from "@/components/UserPostDialogue"
 import { Text, Image, Stack, Card } from '@chakra-ui/react'
 import type { Post } from '@/types';
 import { BASE_URL } from "@/config"
+import LikeButton from "./LikeButton";
 
-function ViewPostCard({ post }: DialogContextProps<Post>) {
+function ViewPostCard({ post, refetch }: DialogContextProps<Post>) {
   return (
     <Card.Root
       width="full"
@@ -54,6 +55,7 @@ function ViewPostCard({ post }: DialogContextProps<Post>) {
         <Text width="full" fontSize="md" overflowWrap="anywhere">
           {post.description}
         </Text>
+        <LikeButton postId={post.id} Likes={post.Likes?.length > 0 ? post.Likes : []} refetch={refetch!} />
       </Stack>
     </Card.Root>
   )

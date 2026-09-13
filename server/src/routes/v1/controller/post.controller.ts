@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { prisma } from "../../../lib/prisma";
 import { NewPostBody, UpdatePostBody } from "../../../schemas/post.schema";
 import { CustomError, UnauthorizedError } from "../../../errors/CustomErrors";
-import { id } from "zod/locales";
 
 
 export const createPost = async (req: Request<{}, any, NewPostBody>, res: Response) => {
@@ -53,7 +52,7 @@ export const editPost = async (req: Request<{ id: string }, any, UpdatePostBody>
 
 export const getAllPosts = async (req: Request, res: Response) => {
     const page = Number(req.query.page) || 1;
-    const limit = 12;
+    const limit = 9;
     const offset = (page - 1) * limit;
     const order = req.query.order === "asc" ? "asc" : "desc";
     const sortBy = req.query.sort_by === "updatedAt" ? "updatedAt" : "title";
@@ -74,6 +73,11 @@ export const getAllPosts = async (req: Request, res: Response) => {
                 select: {
                     name: true,
                     email: true
+                }
+            },
+            Likes: {
+                select: {
+                    userId: true,
                 }
             }
         }
@@ -133,3 +137,76 @@ export const deletePost = async (req: Request<{ id: string }>, res: Response) =>
     res.status(200).json({ message: "Post deleted successfully" });
 }
 
+export const likePost = async (req: Request<{ id: string }>, res: Response) => {
+    const userId = req.user?.user_id;
+    if (!userId) {
+        throw new UnauthorizedError();
+    }
+    const postId = parseInt(req.params.id, 10);
+
+    const validPost = await prisma.posts.findUnique({
+        where: {
+            id: postId,
+            published: true
+        }
+    });
+    if (!validPost) {
+        throw new CustomError(404, "POST_NOT_FOUND", "Post not found or not published");
+    }
+    const existingLike = await prisma.likes.findUnique({
+        where: {
+            userId_postId: {
+                userId,
+                postId,
+            }
+        },
+    });
+    if (existingLike) {
+        throw new CustomError(400, "ALREADY_LIKED", "You have already liked this post");
+    }
+    const response = await prisma.likes.create({
+        data: {
+            postId,
+            userId
+        }
+    });
+    res.status(200).json({ message: "Post liked successfully" });
+}
+
+export const dislikePost = async (req: Request<{ id: string }>, res: Response) => {
+    const userId = req.user?.user_id;
+    if (!userId) {
+        throw new UnauthorizedError();
+    }
+    const postId = parseInt(req.params.id, 10);
+
+    const validPost = await prisma.posts.findUnique({
+        where: {
+            id: postId,
+            published: true
+        }
+    });
+    if (!validPost) {
+        throw new CustomError(404, "POST_NOT_FOUND", "Post not found or not published");
+    }
+    const existingLike = await prisma.likes.findUnique({
+        where: {
+            userId_postId: {
+                userId,
+                postId,
+            }
+        },
+    });
+    if (!existingLike) {
+        throw new CustomError(400, "NOT_LIKED", "You have not liked this post yet");
+    }
+    const response = await prisma.likes.delete({
+        where: {
+            userId_postId: {
+                userId,
+                postId,
+            }
+        }
+    });
+    res.status(200).json({ message: "Post disliked successfully" });
+}

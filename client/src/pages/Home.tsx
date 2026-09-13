@@ -18,7 +18,7 @@ function Home() {
     const [sortBy, setSortBy] = useState<"updatedAt" | "title">("updatedAt");
     const [order, setOrder] = useState<"desc" | "asc">("desc");
     const { data, loading, refetch } = useFetch<Post[]>("/posts", { page: page, sort_by: sortBy, order: order });
-
+    console.log("Home data:", data);
 
     return (
         <div>

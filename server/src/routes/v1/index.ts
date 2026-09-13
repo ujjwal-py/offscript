@@ -1,12 +1,20 @@
 import express from "express"
 import {
-    allUsers, createUser,
-    getMe, logIn, logout
+    allUsers,
+    createUser,
+    getMe,
+    logIn,
+    logout
 } from "./controller/user.controller"
 import {
-    createPost, getAllPosts,
-    editPost, userDraftPosts,
-    userPublishedPosts, deletePost
+    createPost,
+    getAllPosts,
+    editPost,
+    userDraftPosts,
+    userPublishedPosts,
+    deletePost,
+    dislikePost,
+    likePost
 } from "./controller/post.controller";
 import { authenticate } from "../../middlewares/auth";
 import { validate } from "../../middlewares/validate";
@@ -31,4 +39,6 @@ v1.get("/drafts", authenticate, userDraftPosts)
 v1.get("/published", authenticate, userPublishedPosts)
 v1.put("/update-post/:id", authenticate, upload.single("image"), validate(updatePostSchema), editPost)
 v1.delete("/delete-post/:id", authenticate, deletePost)
+v1.post("/like-post/:id", authenticate, likePost)
+v1.delete("/dislike-post/:id", authenticate, dislikePost)
 export default v1;
