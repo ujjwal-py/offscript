@@ -1,10 +1,10 @@
 import { Card, HStack, Text, Image } from '@chakra-ui/react'
 
-import type { DialogContextProps } from "@/components/UserPostDialogue"
-import type { UserPost } from '@/types'
-import { BASE_URL } from "@/config"
 
-function PublishedPostCard({ post }: DialogContextProps<UserPost>) {
+import { BASE_URL } from "@/config"
+import type { HomePost } from '@/store/postStore'
+
+function PublishedPostCard({ post }: { post: HomePost }) {
     return (
         <Card.Root maxWidth="full" size="sm" overflow="hidden"
             borderWidth="1px" margin="2" borderRadius="md"

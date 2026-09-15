@@ -22,6 +22,7 @@ type Author = {
 
 type like = {
     userId: string
+    postId: number
 }
 
 
@@ -31,7 +32,7 @@ export type Post = {
     description?: string,
     imageUrl: string | null,
     author: Author,
-    Likes: like[]
+    likes: like[]
 }
 
 export type PostCardProps = {

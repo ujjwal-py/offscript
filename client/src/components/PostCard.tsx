@@ -1,18 +1,30 @@
-import React from 'react'
 import { Card, Image, Stack, Text } from '@chakra-ui/react'
-import type { PostCardProps } from '@/types'
 import { BsSuitHeartFill } from 'react-icons/bs'
 import { BASE_URL } from "@/config"
+import { type HomePost } from '@/store/postStore'
+// import { useHomePostStore } from '@/store/postStore'
 
-
-function PostCard({ post }: PostCardProps) {
-
+function PostCard({ post }: { post: HomePost }) {
+    // const [postLikes, setPostLikes] = React.useState(post.likes?.length || 0);
+    // // const { currPost: post } = useHomePostStore();
+    // if (!post) {
+    //     return <div>Loading</div>
+    // }
 
     return (
-        <Card.Root maxWidth="full" height="72" overflow="hidden" borderWidth="2px" margin="2" borderRadius="md" boxShadow="xl" borderColor="bg.muted" boxShadowColor="bg.subtle" _hover={{ borderColor: "bg.inverted", cursor: "pointer" }} >
+        <Card.Root maxWidth="full"
+            height="72"
+            overflow="hidden"
+            borderWidth="2px"
+            margin="2"
+            borderRadius="md"
+            boxShadow="xl"
+            borderColor="bg.muted"
+            boxShadowColor="bg.subtle"
+            _hover={{ borderColor: "bg.inverted", cursor: "pointer" }} >
             {post.imageUrl && <Image src={`${BASE_URL}${post.imageUrl}`} fit="cover" maxHeight="1/3" />}
             <Card.Body gap="2">
-                <Card.Title display="flex" justifyContent="space-between" alignItems="center">
+                <Card.Title display="flex" gap="2" justifyContent="space-between" alignItems="center">
                     <Text fontSize="2xl" fontWeight="bold">
                         {post.title}
                     </Text>

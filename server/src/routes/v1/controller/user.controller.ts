@@ -31,7 +31,10 @@ export const createUser = async (req: Request<{}, any, UserBody>, res: Response)
         maxAge: 24 * 60 * 60 * 1000,
         httpOnly: true
     })
-    res.status(200).json({ message: "user created" });
+    res.status(200).json({
+        message: "user created",
+        user: { id: newUser.id, name: newUser.name, email: newUser.email, createdAt: newUser.createdAt }
+    });
 }
 
 export const logIn = async (req: Request<{}, any, UserBody>, res: Response) => {
@@ -54,7 +57,10 @@ export const logIn = async (req: Request<{}, any, UserBody>, res: Response) => {
         maxAge: 24 * 60 * 60 * 1000,
         httpOnly: true
     })
-    res.status(200).json({ message: "User signin Succesfully" });
+    res.status(200).json({
+        message: "User signin Succesfully",
+        user: { id: user.id, name: user.name, email: user.email, createdAt: user.createdAt }
+    });
 
 }
 

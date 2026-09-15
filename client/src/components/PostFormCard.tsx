@@ -1,4 +1,3 @@
-import type { UserPost } from "@/types";
 import {
     Card, Input, Stack, Field,
     Textarea, FileUpload, RadioCard,
@@ -10,15 +9,22 @@ import { api } from "@/Api";
 import axios from "axios";
 import type { DialogContextProps } from "@/components/UserPostDialogue"
 import { BASE_URL } from "@/config"
+import { usePostStore, type DraftPost } from "@/store/postStore";
 
-type PostFromCardProps = DialogContextProps<UserPost>
+type PostFromCardProps = DialogContextProps
 
 
 
-function PostFormCard({ post, refetch, usage, setOpen }: PostFromCardProps) {
+function PostFormCard({ refetch, usage, setOpen }: PostFromCardProps) {
+    const { currPost: post } = usePostStore();
     const [image, setImage] = useState<File | null>(null);
-    const [data, setData] = useState<UserPost>(post);
-    console.log("PostFormCard data:", data);
+    const initialData: DraftPost = {
+        id: -1,
+        title: "",
+        published: false,
+        updatedAt: ""
+    }
+    const [data, setData] = useState<DraftPost>(post || initialData);
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setData((prev) => ({

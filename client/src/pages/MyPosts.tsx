@@ -1,36 +1,16 @@
-import type { UserPost } from '../types';
 import useFetch from '../hooks/useFetch';
 import { Text } from '@chakra-ui/react';
 import DraftedPostCard from '@/components/DraftedPostCard';
 import PostFormCard from '@/components/PostFormCard';
 import UserPostDialogue from '@/components/UserPostDialogue';
-
-// type newPost = {
-//     title: string,
-//     description?: string,
-//     published: "draft" | "publish"
-// }
-
+import type { HomePost } from '@/store/postStore';
 
 function MyPosts() {
-    const postData = {
-        id: -1,
-        title: "",
-        description: "",
-        published: false,
-        updatedAt: "",
-        imageUrl: null
-    }
-    const { data, loading, refetch } = useFetch<UserPost[]>("/drafts");
-
-
-
-
-
+    const { data, loading, refetch } = useFetch<HomePost[]>("/drafts");
 
     return (
         <div>
-            <PostFormCard post={postData} refetch={refetch} usage="create" />
+            <PostFormCard refetch={refetch} usage="create" />
 
             {/* display posts  */}
 

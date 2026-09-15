@@ -1,8 +1,8 @@
 import { Card, Text } from '@chakra-ui/react'
-import type { UserPost } from '@/types'
+import type { HomePost } from '@/store/postStore'
 
 type DraftedPostCardProps = {
-    post: UserPost
+    post: HomePost
 }
 
 function DraftedPostCard({ post }: DraftedPostCardProps) {

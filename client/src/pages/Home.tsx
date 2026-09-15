@@ -1,24 +1,37 @@
 import PostCard from '@/components/PostCard';
 import useFetch from '../hooks/useFetch';
-import type { Post } from '@/types';
+import type { HomePost } from '@/store/postStore';
 import UserPostDialogue from '@/components/UserPostDialogue';
 import ViewPostCard from '@/components/ViewPostCard';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { usePostStore } from '@/store/postStore';
 import {
-    AbsoluteCenter, ButtonGroup,
-    IconButton, Pagination,
-    NativeSelect, Text,
-    Flex, Input, InputGroup
+    AbsoluteCenter,
+    ButtonGroup,
+    IconButton,
+    Pagination,
+    NativeSelect,
+    Text,
+    Flex,
+    Input,
+    InputGroup
 } from "@chakra-ui/react"
 import { LuChevronLeft, LuChevronRight, LuSearch } from "react-icons/lu"
 
 
 function Home() {
+    const { posts, setPosts } = usePostStore();
     const [page, setPage] = useState<number>(1);
     const [sortBy, setSortBy] = useState<"updatedAt" | "title">("updatedAt");
     const [order, setOrder] = useState<"desc" | "asc">("desc");
-    const { data, loading, refetch } = useFetch<Post[]>("/posts", { page: page, sort_by: sortBy, order: order });
-    console.log("Home data:", data);
+    const { data, loading, refetch } = useFetch<HomePost[]>("/posts",
+        { page: page, sort_by: sortBy, order: order });
+
+
+    useEffect(() => {
+        setPosts(data || [])
+    }, [data])
+
 
     return (
         <div>
@@ -52,17 +65,14 @@ function Home() {
                 </Flex>
             </Flex>
 
-
-
-
-            {!loading ? <ul className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-                {data?.map((post) => (
-
-                    <UserPostDialogue post={post}
+            {!loading && posts ? <ul className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+                {posts.map((post) => (
+                    <UserPostDialogue
+                        key={post.id}
+                        post={post}
                         trigger={<PostCard post={post} />}
                         DialogContent={ViewPostCard} usage="view"
                         refetch={refetch}
-
                     />
                 ))}
             </ul>
@@ -95,9 +105,6 @@ function Home() {
                     </Pagination.Root>
                 </AbsoluteCenter>
             </footer>
-
-
-
         </div>
     )
 

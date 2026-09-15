@@ -1,10 +1,15 @@
-import type { DialogContextProps } from "@/components/UserPostDialogue"
+// import type { DialogContextProps } from "@/components/UserPostDialogue"
 import { Text, Image, Stack, Card } from '@chakra-ui/react'
-import type { Post } from '@/types';
+// import type { Post } from '@/types';
 import { BASE_URL } from "@/config"
 import LikeButton from "./LikeButton";
+import { usePostStore } from '@/store/postStore';
 
-function ViewPostCard({ post, refetch }: DialogContextProps<Post>) {
+function ViewPostCard() {
+  const { currPost: post } = usePostStore();
+  if (!post) {
+    return <div>loading...</div>
+  }
   return (
     <Card.Root
       width="full"
@@ -42,7 +47,7 @@ function ViewPostCard({ post, refetch }: DialogContextProps<Post>) {
         >
           {post.author.name || "user"} - {post.author.email}
         </Text>
-        {post.imageUrl && (
+        {post?.imageUrl && (
           <Image
             src={`${BASE_URL}${post.imageUrl}`}
             alt={post.title}
@@ -53,9 +58,9 @@ function ViewPostCard({ post, refetch }: DialogContextProps<Post>) {
           />
         )}
         <Text width="full" fontSize="md" overflowWrap="anywhere">
-          {post.description}
+          {post.description && post.description}
         </Text>
-        <LikeButton postId={post.id} Likes={post.Likes?.length > 0 ? post.Likes : []} refetch={refetch!} />
+        <LikeButton postId={post.id} Likes={post.Likes} />
       </Stack>
     </Card.Root>
   )

@@ -9,7 +9,7 @@ type LikeType = {
     userId: string
 }
 
-function LikeButton({ postId, Likes, refetch }: { postId: number; Likes: LikeType[]; refetch: () => void }) {
+function LikeButton({ postId, Likes }: { postId: number; Likes: LikeType[]; }) {
     const { user } = useAuth();
     const [like, setLike] = useState<boolean>(Likes.some((l: LikeType) => l.userId === user?.id) || false);
     const handleLike = async () => {
@@ -20,7 +20,6 @@ function LikeButton({ postId, Likes, refetch }: { postId: number; Likes: LikeTyp
                 await api.delete(`/dislike-post/${postId}`);
             }
             setLike(!like);
-            refetch();
         } catch (error) {
             console.error("Error liking/disliking post:", error);
         }
