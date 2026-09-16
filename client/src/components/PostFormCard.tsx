@@ -7,7 +7,7 @@ import { useState } from "react"
 import { HiUpload } from 'react-icons/hi'
 import { api } from "@/Api";
 import axios from "axios";
-import type { DialogContextProps } from "@/components/UserPostDialogue"
+import type { DialogContextProps } from "@/components/PostDialogue"
 import { BASE_URL } from "@/config"
 import { usePostStore, type DraftPost } from "@/store/postStore";
 

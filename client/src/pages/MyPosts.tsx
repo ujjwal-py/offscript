@@ -2,11 +2,11 @@ import useFetch from '../hooks/useFetch';
 import { Text } from '@chakra-ui/react';
 import DraftedPostCard from '@/components/DraftedPostCard';
 import PostFormCard from '@/components/PostFormCard';
-import UserPostDialogue from '@/components/UserPostDialogue';
-import type { HomePost } from '@/store/postStore';
+import UserPostDialogue from '@/components/PostDialogue';
+import type { DraftPost } from '@/store/postStore';
 
 function MyPosts() {
-    const { data, loading, refetch } = useFetch<HomePost[]>("/drafts");
+    const { data, loading, refetch } = useFetch<DraftPost[]>("/drafts");
 
     return (
         <div>

@@ -2,9 +2,9 @@ import PublishedPostCard from '@/components/PublishedPostCard';
 import { useAuthStore } from '@/store/authStore';
 import { Text, Image, Card, Stack, Button, Flex } from '@chakra-ui/react'
 import useFetch from '../hooks/useFetch';
-import UserPostDialogue, { type DialogContextProps } from '@/components/UserPostDialogue';
+import UserPostDialogue, { type DialogContextProps } from '@/components/PostDialogue';
 import { api } from '@/Api';
-import { usePostStore, type HomePost } from '@/store/postStore';
+import { usePostStore, type PublishedPost } from '@/store/postStore';
 import { BASE_URL } from '@/config';
 
 function ViewPostCard({ setOpen, refetch }: DialogContextProps) {
@@ -44,7 +44,7 @@ function ViewPostCard({ setOpen, refetch }: DialogContextProps) {
 
 function Profile() {
   const { user, logOut } = useAuthStore();
-  const { data, loading, refetch } = useFetch<HomePost[]>("/published")
+  const { data, loading, refetch } = useFetch<PublishedPost[]>("/published")
 
 
   return (
@@ -60,7 +60,7 @@ function Profile() {
         <ul className='p-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
           {data.map((post) => (
             <UserPostDialogue key={post.id} post={post}
-              usage="view" trigger={<PublishedPostCard post={post} />}
+              usage="update" trigger={<PublishedPostCard post={post} />}
               refetch={refetch}
               DialogContent={ViewPostCard} />
           ))}

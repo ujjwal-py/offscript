@@ -5,7 +5,7 @@ import {
     from "@chakra-ui/react"
 import { useState, useEffect } from "react"
 import { usePostStore } from "@/store/postStore";
-import type { HomePost } from "@/store/postStore";
+import type { OpenablePost } from "@/store/postStore";
 
 type UsageProps = "create" | "update" | "view"
 
@@ -16,15 +16,15 @@ export type DialogContextProps = {
     refetch?: () => Promise<void>; // shared state by the grand parent to refresh data
 };
 
-type PostDialogueProps<T> = {
-    post: T;
+type PostDialogueProps = {
+    post: OpenablePost; // the post to be displayed in the dialogue
     DialogContent: React.ComponentType<DialogContextProps>;
     usage: UsageProps;
     refetch(): Promise<void>; // shared state by the grand parent to refresh data
     trigger: React.ReactNode; // the component that will trigger the dialogue to open
 };
 
-function UserPostDialogue({ post, trigger, refetch, DialogContent, usage }: PostDialogueProps<HomePost>) {
+function PostDialogue({ post, trigger, refetch, DialogContent, usage }: PostDialogueProps) {
     const [open, setOpen] = useState(false)
     const { currPost, setCurrPost } = usePostStore();
     useEffect(() => {
@@ -37,7 +37,7 @@ function UserPostDialogue({ post, trigger, refetch, DialogContent, usage }: Post
 
 
     return (
-        <Dialog.Root lazyMount size="full"
+        <Dialog.Root lazyMount size={usage === "view" ? "full" : "cover"}
             placement="center"
             scrollBehavior="inside"
             motionPreset="slide-in-bottom" open={open}
@@ -55,7 +55,7 @@ function UserPostDialogue({ post, trigger, refetch, DialogContent, usage }: Post
                         maxH="100vh"
                         borderRadius="0"
                         overflow="hidden"
-                        bg="gray.600"
+                        bg="bg"
                     >
                         <Dialog.Header>
                             <Dialog.Title></Dialog.Title>
@@ -79,4 +79,4 @@ function UserPostDialogue({ post, trigger, refetch, DialogContent, usage }: Post
 
 
 
-export default UserPostDialogue
+export default PostDialogue;

@@ -78,6 +78,7 @@ export const getAllPosts = async (req: Request, res: Response) => {
             Likes: {
                 select: {
                     userId: true,
+                    postId: true
                 }
             }
         }
@@ -98,6 +99,12 @@ export const userDraftPosts = async (req: Request, res: Response) => {
             description: true,
             published: true,
             updatedAt: true,
+            Likes: {
+                select: {
+                    userId: true,
+                    postId: true
+                }
+            },
             imageUrl: true,
         }
     });

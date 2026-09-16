@@ -1,16 +1,23 @@
 import { Card, Image, Stack, Text } from '@chakra-ui/react'
 import { BsSuitHeartFill } from 'react-icons/bs'
 import { BASE_URL } from "@/config"
-import { type HomePost } from '@/store/postStore'
-// import { useHomePostStore } from '@/store/postStore'
+import { useLikeStore, type OpenablePost } from '@/store/postStore'
+import { useEffect } from 'react';
 
-function PostCard({ post }: { post: HomePost }) {
-    // const [postLikes, setPostLikes] = React.useState(post.likes?.length || 0);
-    // // const { currPost: post } = useHomePostStore();
-    // if (!post) {
-    //     return <div>Loading</div>
-    // }
+function PostCard({ post }: { post: OpenablePost }) {
+    const homePost = "author" in post && "Likes" in post ? post : null;
+    const likes = useLikeStore((state) => state.likesByPost[post.id] ?? homePost?.Likes ?? []);
+    const setLikes = useLikeStore((state) => state.setLikes);
 
+    useEffect(() => {
+        if (homePost) {
+            setLikes(post.id, homePost.Likes);
+        }
+    }, [post.id, homePost, setLikes])
+
+    if (!homePost) {
+        return null;
+    }
     return (
         <Card.Root maxWidth="full"
             height="72"
@@ -29,14 +36,14 @@ function PostCard({ post }: { post: HomePost }) {
                         {post.title}
                     </Text>
                     <Text fontSize="sm" fontWeight="semibold" display="flex" alignItems="center" gap="1">
-                        <BsSuitHeartFill /> {post.Likes?.length || 0}
+                        <BsSuitHeartFill /> {likes.length}
                     </Text>
                 </Card.Title>
 
                 <Card.Description>
                     <Stack width="full">
                         <Text fontSize="sm" fontWeight="semibold">
-                            {post.author.name || "user"} - {post.author.email}
+                            {homePost.author.name || "user"} - {homePost.author.email}
                         </Text>
                         <Text truncate fontSize="md" color="gray.50">
                             {post.description}

@@ -2,9 +2,9 @@ import { Card, HStack, Text, Image } from '@chakra-ui/react'
 
 
 import { BASE_URL } from "@/config"
-import type { HomePost } from '@/store/postStore'
+import type { PublishedPost } from '@/store/postStore'
 
-function PublishedPostCard({ post }: { post: HomePost }) {
+function PublishedPostCard({ post }: { post: PublishedPost }) {
     return (
         <Card.Root maxWidth="full" size="sm" overflow="hidden"
             borderWidth="1px" margin="2" borderRadius="md"

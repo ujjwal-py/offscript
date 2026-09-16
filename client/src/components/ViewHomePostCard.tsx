@@ -7,9 +7,11 @@ import { usePostStore } from '@/store/postStore';
 
 function ViewPostCard() {
   const { currPost: post } = usePostStore();
-  if (!post) {
-    return <div>loading...</div>
+  if (!post || !("author" in post)) {
+    return null;
   }
+
+
   return (
     <Card.Root
       width="full"
@@ -60,7 +62,7 @@ function ViewPostCard() {
         <Text width="full" fontSize="md" overflowWrap="anywhere">
           {post.description && post.description}
         </Text>
-        <LikeButton postId={post.id} Likes={post.Likes} />
+        <LikeButton post={post} />
       </Stack>
     </Card.Root>
   )

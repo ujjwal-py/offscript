@@ -1,8 +1,8 @@
 import PostCard from '@/components/PostCard';
 import useFetch from '../hooks/useFetch';
 import type { HomePost } from '@/store/postStore';
-import UserPostDialogue from '@/components/UserPostDialogue';
-import ViewPostCard from '@/components/ViewPostCard';
+import PostDialogue from '@/components/PostDialogue';
+import ViewPostCard from '@/components/ViewHomePostCard';
 import { useEffect, useState } from 'react';
 import { usePostStore } from '@/store/postStore';
 import {
@@ -17,21 +17,39 @@ import {
     InputGroup
 } from "@chakra-ui/react"
 import { LuChevronLeft, LuChevronRight, LuSearch } from "react-icons/lu"
+import { useAuthStore } from '@/store/authStore';
+import { api } from '@/Api';
 
 
 function Home() {
-    const { posts, setPosts } = usePostStore();
     const [page, setPage] = useState<number>(1);
+    const { posts, setPosts } = usePostStore();
     const [sortBy, setSortBy] = useState<"updatedAt" | "title">("updatedAt");
     const [order, setOrder] = useState<"desc" | "asc">("desc");
     const { data, loading, refetch } = useFetch<HomePost[]>("/posts",
         { page: page, sort_by: sortBy, order: order });
-
+    const { user, setUser } = useAuthStore();
 
     useEffect(() => {
-        setPosts(data || [])
-    }, [data])
+        if (data) {
+            setPosts(data);
+        }
 
+    }, [data, setPosts])
+
+    useEffect(() => { // need to check if the user is signed in or not to
+        // fix the posts liking 
+        if (user) return;
+
+        api.get("/me")
+            .then((response) => {
+                setUser(response.data);
+            })
+            .catch(() => {
+                // User is not authenticated
+                console.log("not authenticated")
+            });
+    }, [user, setUser]);
 
     return (
         <div>
@@ -64,10 +82,9 @@ function Home() {
                     </NativeSelect.Root>
                 </Flex>
             </Flex>
-
             {!loading && posts ? <ul className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
                 {posts.map((post) => (
-                    <UserPostDialogue
+                    <PostDialogue
                         key={post.id}
                         post={post}
                         trigger={<PostCard post={post} />}
@@ -77,7 +94,7 @@ function Home() {
                 ))}
             </ul>
                 :
-                <h2>Hold on we are fetching posts</h2>}
+                <h2 className="text-cyan-200">Hold on we are fetching posts</h2>}
             <footer>
                 <AbsoluteCenter axis="horizontal">
                     <Pagination.Root count={20} pageSize={2} defaultPage={1} page={page} onPageChange={(e) => setPage(e.page)}>
@@ -107,9 +124,6 @@ function Home() {
             </footer>
         </div>
     )
-
-
-
 }
 
 export default Home
