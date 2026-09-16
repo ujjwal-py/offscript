@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { prisma } from "../../../lib/prisma";
 import { NewPostBody, UpdatePostBody } from "../../../schemas/post.schema";
 import { CustomError, UnauthorizedError } from "../../../errors/CustomErrors";
+import { Prisma } from "../../../../generated/prisma/client";
+
 
 
 export const createPost = async (req: Request<{}, any, NewPostBody>, res: Response) => {
@@ -54,8 +56,9 @@ export const getAllPosts = async (req: Request, res: Response) => {
     const page = Number(req.query.page) || 1;
     const limit = 9;
     const offset = (page - 1) * limit;
-    const order = req.query.order === "asc" ? "asc" : "desc";
-    const sortBy = req.query.sort_by === "updatedAt" ? "updatedAt" : "title";
+    const order: Prisma.SortOrder = req.query.order === "asc" ? "asc" : "desc";
+    const sortBy = req.query.sort_by === "updatedAt" ? "updatedAt" : "likes";
+    const orderBy = sortBy === "likes" ? { Likes: { _count: order } } : { updatedAt: order };
 
     const posts = await prisma.posts.findMany({
         where: {
@@ -63,7 +66,7 @@ export const getAllPosts = async (req: Request, res: Response) => {
         },
         skip: offset,
         take: limit,
-        orderBy: { [sortBy]: order },
+        orderBy,
         select: {
             id: true,
             title: true,

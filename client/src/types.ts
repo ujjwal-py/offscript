@@ -51,5 +51,5 @@ export type ParamBody = {
     page?: number,
     limit?: number,
     order?: "asc" | "desc",
-    sort_by?: "createdAt" | "updatedAt" | "title"
+    sort_by?: "createdAt" | "updatedAt" | "likes" | "title"
 }

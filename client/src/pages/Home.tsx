@@ -24,7 +24,7 @@ import { api } from '@/Api';
 function Home() {
     const [page, setPage] = useState<number>(1);
     const { posts, setPosts } = usePostStore();
-    const [sortBy, setSortBy] = useState<"updatedAt" | "title">("updatedAt");
+    const [sortBy, setSortBy] = useState<"updatedAt" | "likes">("likes");
     const [order, setOrder] = useState<"desc" | "asc">("desc");
     const { data, loading, refetch } = useFetch<HomePost[]>("/posts",
         { page: page, sort_by: sortBy, order: order });
@@ -64,9 +64,9 @@ function Home() {
                         <NativeSelect.Field
                             placeholder="Select sorting option"
                             value={sortBy}
-                            onChange={(e) => setSortBy(e.currentTarget.value as "updatedAt" | "title")}>
+                            onChange={(e) => setSortBy(e.currentTarget.value as "updatedAt" | "likes")}>
                             <option value="updatedAt">Date</option>
-                            <option value="title">Title</option>
+                            <option value="likes">Likes</option>
                         </NativeSelect.Field>
                         <NativeSelect.Indicator />
                     </NativeSelect.Root>
