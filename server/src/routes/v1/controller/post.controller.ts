@@ -173,6 +173,36 @@ export const userPublishedPosts = async (req: Request, res: Response) => {
     res.status(200).json(posts);
 }
 
+export const searchUserPosts = async (req: Request, res: Response) => {
+    const authorId = req.user?.user_id;
+    const q = String(req.query.q || "").trim();
+    if (!q) {
+        return res.status(400).json({ message: "Search query is required" });
+    }
+    const order: Prisma.SortOrder = req.query.order === "asc" ? "asc" : "desc";
+    const sortBy = req.query.sort_by === "updatedAt" ? "updatedAt" : "likes";
+    const orderBy = sortBy === "likes" ? { Likes: { _count: order } } : { updatedAt: order };
+    const posts = await prisma.posts.findMany({
+        where: {
+            authorId: authorId,
+            title: {
+                contains: q
+            },
+            published: true
+        },
+        orderBy,
+        select: {
+            id: true,
+            title: true,
+            description: true,
+            published: true,
+            updatedAt: true,
+            imageUrl: true,
+            Likes: true
+        }
+    })
+    res.status(200).json(posts);
+}
 
 
 export const deletePost = async (req: Request<{ id: string }>, res: Response) => {

@@ -30,7 +30,7 @@ type PostDialogueProps = {
 function PostDialogue({ post, trigger, refetch, DialogContent, usage }: PostDialogueProps) {
     const [open, setOpen] = useState(false)
     const { currPost, setCurrPost } = usePostStore();
-    const { theme } = useThemeStore();
+    const theme = useThemeStore((state) => state.theme)
     useEffect(() => {
         if (open) {
             setCurrPost(post);

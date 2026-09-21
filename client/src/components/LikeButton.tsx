@@ -7,7 +7,7 @@ import { useLikeStore, type HomePost } from '@/store/postStore';
 import { useAuthStore } from '@/store/authStore';
 
 function LikeButton({ post }: { post: HomePost }) {
-    const { user } = useAuthStore();
+    const user = useAuthStore((state) => state.user);
     const likes = useLikeStore((state) => state.likesByPost[post.id] ?? post.Likes);
     const setLikes = useLikeStore((state) => state.setLikes);
     const addLike = useLikeStore((state) => state.addLike);

@@ -23,7 +23,7 @@ function useFetch<T>(url: string, params?: ParamBody) {
 
   useEffect(() => {
     fetchData();
-  }, [url, params?.page, params?.limit, params?.order, params?.sort_by]);
+  }, [url, params?.page, params?.limit, params?.order, params?.sort_by, params?.q]);
 
   return ({ data, loading, error, refetch: fetchData })
 }

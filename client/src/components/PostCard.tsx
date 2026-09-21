@@ -19,7 +19,8 @@ function PostCard({ post }: { post: OpenablePost }) {
         return null;
     }
     return (
-        <Card.Root maxWidth="full"
+        <Card.Root
+            maxWidth="full"
             height="72"
             overflow="hidden"
             borderWidth="2px"

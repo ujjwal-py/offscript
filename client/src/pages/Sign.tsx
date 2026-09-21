@@ -14,7 +14,7 @@ function Sign() {
     const navigate = useNavigate();
     const [mode, setMode] = useState<mode>("signup");
     // const { user, login } = useAuth();
-    const { setUser } = useAuthStore();
+    const setUser = useAuthStore((state) => state.setUser)
     const [formData, setFormData] = useState<SignInBody>({
         name: "",
         email: "",

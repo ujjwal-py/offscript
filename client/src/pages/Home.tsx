@@ -5,13 +5,14 @@ import PostDialogue from '@/components/PostDialogue';
 import ViewPostCard from '@/components/ViewHomePostCard';
 import { useEffect, useState } from 'react';
 import { usePostStore } from '@/store/postStore';
+import { useOptionStore } from '@/store/postStore';
 import {
     ButtonGroup,
     IconButton,
     Pagination,
     Text,
     Box,
-    Stack
+    Flex
 } from "@chakra-ui/react"
 import { LuChevronRight, LuChevronLeft } from "react-icons/lu"
 import { useAuthStore } from '@/store/authStore';
@@ -21,12 +22,18 @@ import SearchOptions from '@/components/SearchOptions';
 
 function Home() {
     const [page, setPage] = useState<number>(1);
-    const { posts, setPosts } = usePostStore();
-    const [sortBy, setSortBy] = useState<"updatedAt" | "likes">("likes");
-    const [order, setOrder] = useState<"desc" | "asc">("desc");
-    const { data, loading, refetch } = useFetch<HomePost[]>("/posts",
-        { page: page, sort_by: sortBy, order: order });
-    const { user, setUser } = useAuthStore();
+    const posts = usePostStore((state) => state.posts);
+    const setPosts = usePostStore((state) => state.setPosts);
+    const q = useOptionStore((state) => state.q);
+    const order = useOptionStore((state) => state.order);
+    const sort_by = useOptionStore((state) => state.sortBy);
+
+    const postsUrl = q.trim() ? "/search-public" : "/posts"; // if searchbox is empty then defaults to simple fetch
+    const { data, loading, refetch } = useFetch<HomePost[]>(postsUrl,
+        { q, page, sort_by, order });
+    const user = useAuthStore((state) => state.user);
+    const setUser = useAuthStore((state) => state.setUser);
+
 
     useEffect(() => {
         if (data) {
@@ -50,13 +57,9 @@ function Home() {
     }, [user, setUser]);
 
     return (
-        <Stack alignItems="center" bg="bg" minH="100vh">
+        <Flex direction="column" alignItems="center" bg="bg" minH="100vh">
             <Text textAlign="center" fontSize="4xl" fontWeight="bold">Posts</Text>
-            <SearchOptions sortBy={sortBy}
-                setSortBy={setSortBy}
-                order={order}
-                setOrder={setOrder}
-            />
+            <SearchOptions refetch={refetch} />
 
             {!loading && posts ? <Box as="ul" className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' bg="bg" >
                 {posts.map((post) => (
@@ -103,7 +106,7 @@ function Home() {
                     </Pagination.NextTrigger>
                 </ButtonGroup>
             </Pagination.Root>
-        </Stack>
+        </Flex>
     )
 }
 

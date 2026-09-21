@@ -86,3 +86,24 @@ export const useLikeStore = create<LikeState>((set) => ({
         },
     })),
 }));
+
+export type SortTypes = "updatedAt" | "likes";
+export type orderTypes = "asc" | "desc";
+
+interface OptionSate {
+    q: string;
+    sortBy: SortTypes;
+    order: orderTypes;
+    setQ: (q: string) => void;
+    setSortBy: (sortBy: SortTypes) => void;
+    setOrder: (order: orderTypes) => void;
+}
+
+export const useOptionStore = create<OptionSate>((set) => ({
+    q: "",
+    setQ: (q: string) => set({ q }),
+    sortBy: "likes",
+    order: "desc",
+    setSortBy: (sortBy: SortTypes) => set({ sortBy }),
+    setOrder: (order: orderTypes) => set({ order })
+}));

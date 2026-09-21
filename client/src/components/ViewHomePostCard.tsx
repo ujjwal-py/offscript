@@ -6,7 +6,7 @@ import LikeButton from "./LikeButton";
 import { usePostStore } from '@/store/postStore';
 
 function ViewPostCard() {
-  const { currPost: post } = usePostStore();
+  const post = usePostStore((state) => state.currPost);
   if (!post || !("author" in post)) {
     return null;
   }
