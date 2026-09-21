@@ -1,12 +1,11 @@
 import { Request, Response } from "express"
 import { prisma } from "../../../lib/prisma"
 import jwt from "jsonwebtoken"
-import "dotenv/config"
 import bcrypt from "bcrypt"
 import { CustomError, NotFoundError, UnauthorizedError } from "../../../errors/CustomErrors"
 import { UserBody } from "../../../schemas/user.schema"
+import { config } from "../../../config"
 
-const jwt_secret = process.env.JWT_SECRET!
 
 export const createUser = async (req: Request<{}, any, UserBody>, res: Response) => {
     const { name, email, password } = req.body
@@ -26,10 +25,11 @@ export const createUser = async (req: Request<{}, any, UserBody>, res: Response)
             password: hashedPassword
         },
     });
-    const token = jwt.sign({ user_id: newUser.id }, jwt_secret)
+    const token = jwt.sign({ user_id: newUser.id }, config.jwt_secret)
     res.cookie("jwt_token", token, {
         maxAge: 24 * 60 * 60 * 1000,
-        httpOnly: true
+        httpOnly: true,
+        secure: config.node_env === "production" ? true : false,
     })
     res.status(200).json({
         message: "user created",
@@ -52,10 +52,11 @@ export const logIn = async (req: Request<{}, any, UserBody>, res: Response) => {
     if (!match) {
         throw new UnauthorizedError("Invalid Password");
     }
-    const token = jwt.sign({ user_id: user.id }, jwt_secret)
+    const token = jwt.sign({ user_id: user.id }, config.jwt_secret)
     res.cookie("jwt_token", token, {
         maxAge: 24 * 60 * 60 * 1000,
-        httpOnly: true
+        httpOnly: true,
+        secure: config.node_env === "production" ? true : false,
     })
     res.status(200).json({
         message: "User signin Succesfully",
@@ -94,7 +95,8 @@ export const getMe = async (req: Request, res: Response) => {
 
 export const logout = async (req: Request, res: Response) => {
     res.clearCookie("jwt_token", {
-        httpOnly: true
+        httpOnly: true,
+        secure: config.node_env === "production" ? true : false,
     });
     res.status(200).json({ message: "Logged out" });
 }

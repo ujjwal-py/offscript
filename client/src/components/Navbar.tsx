@@ -39,9 +39,12 @@ function Navbar() {
                             <Link to="/my-posts"><Text fontSize="xl" fontWeight="semibold" color="bg.inverted">Create</Text></Link>
                         </Flex>
                         <Flex gap="8" alignContent="center" justifyContent="center">
-                            <Button size="sm" borderRadius="full" onClick={() => {
-                                setTheme(theme === "dark" ? "light" : "dark")
-                            }}>{theme === "dark" ? <FiSun /> : <BsFillMoonStarsFill />}</Button>
+                            <Button size="sm"
+                                borderRadius="full"
+                                onClick={() => {
+                                    setTheme(theme === "dark" ? "light" : "dark")
+                                }}>
+                                {theme === "dark" ? <FiSun /> : <BsFillMoonStarsFill />}</Button>
                             <Link to="/profile"><Text fontSize="xl" fontWeight="semibold" color="bg.inverted">Profile</Text></Link>
 
                         </Flex>

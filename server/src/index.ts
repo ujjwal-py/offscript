@@ -1,18 +1,17 @@
-import express, { ErrorRequestHandler, NextFunction, Request, Response } from "express";
+import express, { Request, Response } from "express";
 import v1 from "./routes/v1";
 import "dotenv/config"
 import cookieParser from 'cookie-parser';
 import { errorHandler } from "./middlewares/errorHandler";
 import cors from "cors"
 import path from "path"
+import { config } from "./config";
 
-
-
-const port = process.env.PORT!;
+const port = config.port;
 const app = express();
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: config.frontend_url,
     credentials: true
 }))
 app.use(express.json());
