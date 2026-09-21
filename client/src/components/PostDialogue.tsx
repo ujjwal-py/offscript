@@ -31,7 +31,6 @@ function PostDialogue({ post, trigger, refetch, DialogContent, usage }: PostDial
     const [open, setOpen] = useState(false)
     const { currPost, setCurrPost } = usePostStore();
     const { theme } = useThemeStore();
-    console.log(theme)
     useEffect(() => {
         if (open) {
             setCurrPost(post);

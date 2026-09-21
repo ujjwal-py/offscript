@@ -9,17 +9,14 @@ import {
     ButtonGroup,
     IconButton,
     Pagination,
-    NativeSelect,
     Text,
-    Flex,
-    Input,
-    InputGroup,
     Box,
     Stack
 } from "@chakra-ui/react"
-import { LuChevronLeft, LuChevronRight, LuSearch } from "react-icons/lu"
+import { LuChevronRight, LuChevronLeft } from "react-icons/lu"
 import { useAuthStore } from '@/store/authStore';
 import { api } from '@/Api';
+import SearchOptions from '@/components/SearchOptions';
 
 
 function Home() {
@@ -36,10 +33,10 @@ function Home() {
             setPosts(data);
         }
 
-    }, [data, setPosts])
+    }, [data])
 
     useEffect(() => { // need to check if the user is signed in or not to
-        // fix the posts liking 
+        // fix the posts liking without sigin
         if (user) return;
 
         api.get("/me")
@@ -55,34 +52,12 @@ function Home() {
     return (
         <Stack alignItems="center" bg="bg" minH="100vh">
             <Text textAlign="center" fontSize="4xl" fontWeight="bold">Posts</Text>
-            <Flex flexDirection={{ base: "column", md: "row" }} justifyContent="space-between" mb="4" mt="4" padding="2" gap="4"  >
-                <InputGroup startAddon={<LuSearch size="14" />}>
-                    <Input size="md" placeholder="Search posts..." />
-                </InputGroup>
-                <Flex gap="4" alignItems="center" justifyContent={{ base: "flex-start", md: "flex-end" }} mt={{ base: "4", md: "0" }}>
-                    <Text fontSize="sm" fontWeight="semibold">Options:</Text>
-                    <NativeSelect.Root size="sm" width="240px" >
-                        <NativeSelect.Field
-                            placeholder="Select sorting option"
-                            value={sortBy}
-                            onChange={(e) => setSortBy(e.currentTarget.value as "updatedAt" | "likes")}>
-                            <option value="updatedAt">Date</option>
-                            <option value="likes">Likes</option>
-                        </NativeSelect.Field>
-                        <NativeSelect.Indicator />
-                    </NativeSelect.Root>
-                    <NativeSelect.Root size="sm" width="240px" >
-                        <NativeSelect.Field
-                            placeholder="Choose order"
-                            value={order}
-                            onChange={(e) => setOrder(e.currentTarget.value as "desc" | "asc")}>
-                            <option value="desc">Descending</option>
-                            <option value="asc">Ascending</option>
-                        </NativeSelect.Field>
-                        <NativeSelect.Indicator />
-                    </NativeSelect.Root>
-                </Flex>
-            </Flex>
+            <SearchOptions sortBy={sortBy}
+                setSortBy={setSortBy}
+                order={order}
+                setOrder={setOrder}
+            />
+
             {!loading && posts ? <Box as="ul" className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' bg="bg" >
                 {posts.map((post) => (
                     <PostDialogue

@@ -14,7 +14,8 @@ import {
     userPublishedPosts,
     deletePost,
     dislikePost,
-    likePost
+    likePost,
+    searchPublicPosts
 } from "./controller/post.controller";
 import { authenticate } from "../../middlewares/auth";
 import { validate } from "../../middlewares/validate";
@@ -32,7 +33,7 @@ v1.get("/me", authenticate, getMe);
 v1.post("/logout", authenticate, logout);
 
 
-// post routes
+// posts routes
 v1.post("/new-post", authenticate, upload.single("image"), validate(createPostSchema), createPost)
 v1.get("/posts", getAllPosts)
 v1.get("/drafts", authenticate, userDraftPosts)
@@ -41,4 +42,5 @@ v1.put("/update-post/:id", authenticate, upload.single("image"), validate(update
 v1.delete("/delete-post/:id", authenticate, deletePost)
 v1.post("/like-post/:id", authenticate, likePost)
 v1.delete("/dislike-post/:id", authenticate, dislikePost)
+v1.get("/search-public", searchPublicPosts)
 export default v1;

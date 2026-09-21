@@ -6,8 +6,10 @@ import UserPostDialogue, { type DialogContextProps } from '@/components/PostDial
 import { api } from '@/Api';
 import { usePostStore, type PublishedPost } from '@/store/postStore';
 import { BASE_URL } from '@/config';
+import SearchOptions from '@/components/SearchOptions';
+import { useState } from 'react';
 
-function ViewPostCard({ setOpen, refetch }: DialogContextProps) {
+function ViewPostCard({ setOpen, refetch }: DialogContextProps) { // custom postcard to display published posts
   const { currPost: post } = usePostStore();
   if (!post) return <div>loading...</div>
   const handleDelete = async () => {
@@ -44,7 +46,10 @@ function ViewPostCard({ setOpen, refetch }: DialogContextProps) {
 
 function Profile() {
   const { user, logOut } = useAuthStore();
-  const { data, loading, refetch } = useFetch<PublishedPost[]>("/published")
+  const [sortBy, setSortBy] = useState<"likes" | "updatedAt">("likes");
+  const [order, setOrder] = useState<"asc" | "desc">("desc");
+  const { data, loading, refetch } = useFetch<PublishedPost[]>("/published", { sort_by: sortBy, order })
+
 
 
   return (
@@ -64,6 +69,7 @@ function Profile() {
       </Flex>
 
       <Text marginLeft="2" textAlign="center" fontWeight="semibold" fontSize="2xl">Your Published Posts</Text>
+      <SearchOptions order={order} setOrder={setOrder} sortBy={sortBy} setSortBy={setSortBy} />
 
       {loading === false && data ?
         <Box as="ul" className='p-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4' >
