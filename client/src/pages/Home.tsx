@@ -57,7 +57,7 @@ function Home() {
     }, [user, setUser]);
 
     return (
-        <Flex direction="column" alignItems="center" bg="bg" minH="100vh">
+        <Flex direction="column" bg="bg" minH="100vh">
             <Text textAlign="center" fontSize="4xl" fontWeight="bold">Posts</Text>
             <SearchOptions />
 
@@ -76,15 +76,18 @@ function Home() {
                 <h2 className="text-cyan-200">Hold on we are fetching posts</h2>}
 
             <Pagination.Root count={20}
+                margin="auto"
                 pageSize={2}
                 defaultPage={1}
                 page={page}
                 bg="bg.subtle"
                 marginBottom="4"
+                maxW="calc(100vw - 2rem)"
+                overflowX="auto"
 
                 onPageChange={(e) => setPage(e.page)}>
 
-                <ButtonGroup variant="outline" size="md">
+                <ButtonGroup variant="outline" size="md" width="max-content" flexWrap="nowrap">
                     <Pagination.PrevTrigger asChild>
                         <IconButton>
                             <LuChevronLeft />

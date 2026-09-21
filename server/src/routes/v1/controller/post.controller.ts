@@ -3,6 +3,7 @@ import { prisma } from "../../../lib/prisma";
 import { NewPostBody, UpdatePostBody } from "../../../schemas/post.schema";
 import { CustomError, UnauthorizedError } from "../../../errors/CustomErrors";
 import { Prisma } from "../../../../generated/prisma/client";
+import { supabase } from "../../../lib/supabase";
 
 
 
@@ -12,7 +13,26 @@ export const createPost = async (req: Request<{}, any, NewPostBody>, res: Respon
     if (!authorId) {
         throw new UnauthorizedError();
     }
-    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+    let imageUrl: string | null = null;
+    if (req.file) {
+        const ext = req.file.mimetype.split("/")[1];
+        const imagePath = `${Date.now()}-${Math.round(Math.random() * 1e9)}.${ext}`;
+
+        const { error } = await supabase.storage
+            .from(process.env.SUPABASE_BUCKET!)
+            .upload(imagePath, req.file.buffer, {
+                contentType: req.file.mimetype, // e.g. "image/png", "image/jpeg"
+            });
+
+        if (error) {
+            console.error(error);
+            throw new CustomError(500, "SUPABASE_UPLOAD_ERROR", "Failed to upload image to Supabase");
+        }
+        imageUrl = supabase.storage
+            .from(process.env.SUPABASE_BUCKET!)
+            .getPublicUrl(imagePath).data.publicUrl;
+    }
+    // const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
     const newPost = await prisma.posts.create({
         data: {
             title,
@@ -213,12 +233,14 @@ export const deletePost = async (req: Request<{ id: string }>, res: Response) =>
         throw new UnauthorizedError();
     }
     const id = parseInt(req.params.id, 10);
+
     const post = await prisma.posts.delete({
         where: {
             id,
             authorId,
         }
     });
+
     res.status(200).json({ message: "Post deleted successfully" });
 }
 

@@ -7,11 +7,26 @@ function SearchOptions() {
 
     return (
         <>
-            <Flex flexDirection={{ base: "column", md: "row" }} justifyContent="space-between" mb="4" mt="4" padding="2" gap="4"  >
+            <Flex
+                width="full"
+                flexDirection={{ base: "column", md: "row" }}
+                justifyContent="space-between"
+                mb="4"
+                mt="4"
+                padding={{ base: "2", md: "4" }}
+                gap="4"
+            >
                 <Search />
-                <Flex gap="4" alignItems="center" justifyContent={{ base: "flex-start", md: "flex-end" }} mt={{ base: "4", md: "0" }}>
-                    <Text fontSize="sm" fontWeight="semibold">Options:</Text>
-                    <NativeSelect.Root size="sm" width="240px" >
+                <Flex
+                    width="full"
+                    gap="4"
+                    alignItems={{ base: "stretch", sm: "center" }}
+                    justifyContent={{ base: "flex-start", md: "flex-end" }}
+                    flexDirection={{ base: "column", sm: "row" }}
+                    mt={{ base: "0", md: "0" }}
+                >
+                    <Text fontSize="sm" fontWeight="semibold" flexShrink="0">Options:</Text>
+                    <NativeSelect.Root size="sm" width={{ base: "full", sm: "240px" }}>
                         <NativeSelect.Field
                             placeholder="Select sorting option"
                             value={sortBy}
@@ -21,7 +36,7 @@ function SearchOptions() {
                         </NativeSelect.Field>
                         <NativeSelect.Indicator />
                     </NativeSelect.Root>
-                    <NativeSelect.Root size="sm" width="240px" >
+                    <NativeSelect.Root size="sm" width={{ base: "full", sm: "240px" }}>
                         <NativeSelect.Field
                             placeholder="Choose order"
                             value={order}

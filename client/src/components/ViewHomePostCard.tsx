@@ -1,7 +1,6 @@
 // import type { DialogContextProps } from "@/components/UserPostDialogue"
 import { Text, Image, Stack, Card } from '@chakra-ui/react'
 // import type { Post } from '@/types';
-import { BASE_URL } from "@/config"
 import LikeButton from "./LikeButton";
 import { usePostStore } from '@/store/postStore';
 
@@ -51,7 +50,7 @@ function ViewPostCard() {
         </Text>
         {post?.imageUrl && (
           <Image
-            src={`${BASE_URL}${post.imageUrl}`}
+            src={post.imageUrl}
             alt={post.title}
             width="full"
             maxW="100%"

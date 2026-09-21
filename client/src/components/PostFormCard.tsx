@@ -8,7 +8,6 @@ import { HiUpload } from 'react-icons/hi'
 import { api } from "@/Api";
 import axios from "axios";
 import type { DialogContextProps } from "@/components/PostDialogue"
-import { BASE_URL } from "@/config"
 import { usePostStore, type DraftPost } from "@/store/postStore";
 
 type PostFromCardProps = DialogContextProps
@@ -46,21 +45,20 @@ function PostFormCard({ refetch, usage, setOpen }: PostFromCardProps) {
             formData.append("image", image);
         }
         try {
-            let res;
             if (usage === "create") {
-                res = await api.post("/new-post", formData);
+                await api.post("/new-post", formData);
             } else {
-                res = await api.put(`/update-post/${data.id}`, formData);
+                await api.put(`/update-post/${data.id}`, formData);
             }
-            console.log(res.data);
+            // console.log(res.data);
             if (setOpen) {
-                console.log("Closing dialog");
                 setOpen(false);
             }
             // call the refetch function to refresh the data
             if (refetch) {
                 refetch();
             }
+            window.alert("Post created successfully")
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 console.error("Status:", err.response?.status);
@@ -136,7 +134,7 @@ function PostFormCard({ refetch, usage, setOpen }: PostFromCardProps) {
                                 </FileUpload.Trigger>
                                 <FileUpload.List />
                             </FileUpload.Root>
-                            {data.imageUrl && <Image width="12" height="12" src={`${BASE_URL}${data.imageUrl}`} alt="Selected file" />}
+                            {data.imageUrl && <Image width="12" height="12" src={data.imageUrl} alt="Selected file" />}
                         </HStack>
                     </Field.Root>
                     <Field.Root >

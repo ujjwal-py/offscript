@@ -1,6 +1,5 @@
 import { Card, Image, Stack, Text } from '@chakra-ui/react'
 import { BsSuitHeartFill } from 'react-icons/bs'
-import { BASE_URL } from "@/config"
 import { useLikeStore, type OpenablePost } from '@/store/postStore'
 import { useEffect } from 'react';
 
@@ -31,7 +30,7 @@ function PostCard({ post }: { post: OpenablePost }) {
             borderColor="bg.emphasized"
             boxShadowColor="bg.subtle"
             _hover={{ borderColor: "bg.inverted", cursor: "pointer" }} >
-            {post.imageUrl && <Image src={`${BASE_URL}${post.imageUrl}`} fit="cover" maxHeight="1/3" />}
+            {post.imageUrl && <Image src={post.imageUrl} fit="cover" maxHeight="1/3" />}
             <Card.Body gap="2">
                 <Card.Title display="flex" gap="2" justifyContent="space-between" alignItems="center">
                     <Text fontSize="2xl" fontWeight="bold">

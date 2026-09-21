@@ -5,10 +5,10 @@ import useDebounce from "@/hooks/useDebounce";
 
 function Search() {
     const [searchQuery, setSearchQuery] = useState("");
-    const q = useDebounce(searchQuery);
+    useDebounce(searchQuery);
     return (
         <>
-            <InputGroup endAddon={<LuSearch size="14" />} _hover={{ cursor: "pointer" }} >
+            <InputGroup width="full" endAddon={<LuSearch size="14" />} _hover={{ cursor: "pointer" }} >
                 <Input size="md"
                     placeholder="Search posts..."
                     value={searchQuery}
