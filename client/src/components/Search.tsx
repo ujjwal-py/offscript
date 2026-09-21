@@ -3,11 +3,7 @@ import { InputGroup, Input } from '@chakra-ui/react'
 
 import { useOptionStore } from '@/store/postStore';
 
-type SearchProps = {
-    refetch?: () => void;
-}
-
-function Search({ refetch }: SearchProps) {
+function Search() {
     const setSearchValue = useOptionStore((state) => state.setQ)
     const searchValue = useOptionStore((state) => state.q)
 
@@ -18,7 +14,7 @@ function Search({ refetch }: SearchProps) {
 
     return (
         <>
-            <InputGroup endAddon={<LuSearch size="14" />} onClick={refetch} _hover={{ cursor: "pointer" }} >
+            <InputGroup endAddon={<LuSearch size="14" />} _hover={{ cursor: "pointer" }} >
                 <Input size="md"
                     placeholder="Search posts..."
                     value={searchValue}
