@@ -45,10 +45,12 @@ function ViewPostCard({ setOpen, refetch }: DialogContextProps) { // custom post
 
 function Profile() {
   const { user, logOut } = useAuthStore();;
+  const q = useOptionStore((state) => state.q);
   const sort_by = useOptionStore((state) => state.sortBy);
   const order = useOptionStore((state) => state.order)
+  const postsUrl = q.trim() ? "/search-user-posts" : "/published"
 
-  const { data, loading, refetch } = useFetch<PublishedPost[]>("/published", { sort_by, order })
+  const { data, loading, refetch } = useFetch<PublishedPost[]>(postsUrl, { sort_by, order, q })
 
 
 

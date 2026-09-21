@@ -15,7 +15,8 @@ import {
     deletePost,
     dislikePost,
     likePost,
-    searchPublicPosts
+    searchPublicPosts,
+    searchUserPosts,
 } from "./controller/post.controller";
 import { authenticate } from "../../middlewares/auth";
 import { validate } from "../../middlewares/validate";
@@ -43,4 +44,5 @@ v1.delete("/delete-post/:id", authenticate, deletePost)
 v1.post("/like-post/:id", authenticate, likePost)
 v1.delete("/dislike-post/:id", authenticate, dislikePost)
 v1.get("/search-public", searchPublicPosts)
+v1.get("/search-user-posts", authenticate, searchUserPosts)
 export default v1;

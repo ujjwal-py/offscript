@@ -205,6 +205,8 @@ export const searchUserPosts = async (req: Request, res: Response) => {
 }
 
 
+
+
 export const deletePost = async (req: Request<{ id: string }>, res: Response) => {
     const authorId = req.user?.user_id;
     if (!authorId) {
