@@ -8,9 +8,10 @@ type DraftedPostCardProps = {
 function DraftedPostCard({ post }: DraftedPostCardProps) {
     return (
         <Card.Root maxWidth="full" size="sm" overflow="hidden"
-            borderWidth="1px" margin="2" borderRadius="md"
-            borderColor="grey.400" boxShadowColor="white"
-            _hover={{ borderColor: "white", cursor: "pointer" }} >
+            bg="bg.muted"
+            borderWidth="1px" margin="2" borderRadius="lg"
+            borderColor="grey.400" boxShadowColor="bg.subtle"
+            _hover={{ borderColor: "bg.inverted", cursor: "pointer" }} >
             <Card.Body gap="1">
                 <Card.Title fontSize="lg">{post.title}</Card.Title>
             </Card.Body>

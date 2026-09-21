@@ -127,6 +127,7 @@ export const userPublishedPosts = async (req: Request, res: Response) => {
             published: true,
             updatedAt: true,
             imageUrl: true,
+            Likes: true
         }
     });
     res.status(200).json(posts);

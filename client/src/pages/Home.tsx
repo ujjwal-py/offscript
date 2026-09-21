@@ -6,7 +6,6 @@ import ViewPostCard from '@/components/ViewHomePostCard';
 import { useEffect, useState } from 'react';
 import { usePostStore } from '@/store/postStore';
 import {
-    AbsoluteCenter,
     ButtonGroup,
     IconButton,
     Pagination,
@@ -14,7 +13,9 @@ import {
     Text,
     Flex,
     Input,
-    InputGroup
+    InputGroup,
+    Box,
+    Stack
 } from "@chakra-ui/react"
 import { LuChevronLeft, LuChevronRight, LuSearch } from "react-icons/lu"
 import { useAuthStore } from '@/store/authStore';
@@ -52,7 +53,7 @@ function Home() {
     }, [user, setUser]);
 
     return (
-        <div>
+        <Stack alignItems="center" bg="bg" minH="100vh">
             <Text textAlign="center" fontSize="4xl" fontWeight="bold">Posts</Text>
             <Flex flexDirection={{ base: "column", md: "row" }} justifyContent="space-between" mb="4" mt="4" padding="2" gap="4"  >
                 <InputGroup startAddon={<LuSearch size="14" />}>
@@ -82,7 +83,7 @@ function Home() {
                     </NativeSelect.Root>
                 </Flex>
             </Flex>
-            {!loading && posts ? <ul className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+            {!loading && posts ? <Box as="ul" className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' bg="bg" >
                 {posts.map((post) => (
                     <PostDialogue
                         key={post.id}
@@ -92,37 +93,42 @@ function Home() {
                         refetch={refetch}
                     />
                 ))}
-            </ul>
+            </Box>
                 :
                 <h2 className="text-cyan-200">Hold on we are fetching posts</h2>}
-            <footer>
-                <AbsoluteCenter axis="horizontal">
-                    <Pagination.Root count={20} pageSize={2} defaultPage={1} page={page} onPageChange={(e) => setPage(e.page)}>
-                        <ButtonGroup variant="outline" size="md">
-                            <Pagination.PrevTrigger asChild>
-                                <IconButton>
-                                    <LuChevronLeft />
-                                </IconButton>
-                            </Pagination.PrevTrigger>
 
-                            <Pagination.Items
-                                render={(page) => (
-                                    <IconButton variant={{ base: "ghost", _selected: "outline" }}>
-                                        {page.value}
-                                    </IconButton>
-                                )}
-                            />
+            <Pagination.Root count={20}
+                pageSize={2}
+                defaultPage={1}
+                page={page}
+                bg="bg.subtle"
+                marginBottom="4"
 
-                            <Pagination.NextTrigger asChild>
-                                <IconButton>
-                                    <LuChevronRight />
-                                </IconButton>
-                            </Pagination.NextTrigger>
-                        </ButtonGroup>
-                    </Pagination.Root>
-                </AbsoluteCenter>
-            </footer>
-        </div>
+                onPageChange={(e) => setPage(e.page)}>
+
+                <ButtonGroup variant="outline" size="md">
+                    <Pagination.PrevTrigger asChild>
+                        <IconButton>
+                            <LuChevronLeft />
+                        </IconButton>
+                    </Pagination.PrevTrigger>
+
+                    <Pagination.Items
+                        render={(page) => (
+                            <IconButton variant={{ base: "ghost", _selected: "outline" }}>
+                                {page.value}
+                            </IconButton>
+                        )}
+                    />
+
+                    <Pagination.NextTrigger asChild>
+                        <IconButton>
+                            <LuChevronRight />
+                        </IconButton>
+                    </Pagination.NextTrigger>
+                </ButtonGroup>
+            </Pagination.Root>
+        </Stack>
     )
 }
 

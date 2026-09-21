@@ -1,11 +1,14 @@
 import {
-    CloseButton, Dialog,
+    Button,
+    Dialog,
     Portal,
 }
     from "@chakra-ui/react"
 import { useState, useEffect } from "react"
 import { usePostStore } from "@/store/postStore";
 import type { OpenablePost } from "@/store/postStore";
+import { Theme } from "@chakra-ui/react";
+import { useThemeStore } from "@/store/themeStore";
 
 type UsageProps = "create" | "update" | "view"
 
@@ -27,6 +30,8 @@ type PostDialogueProps = {
 function PostDialogue({ post, trigger, refetch, DialogContent, usage }: PostDialogueProps) {
     const [open, setOpen] = useState(false)
     const { currPost, setCurrPost } = usePostStore();
+    const { theme } = useThemeStore();
+    console.log(theme)
     useEffect(() => {
         if (open) {
             setCurrPost(post);
@@ -37,43 +42,51 @@ function PostDialogue({ post, trigger, refetch, DialogContent, usage }: PostDial
 
 
     return (
-        <Dialog.Root lazyMount size={usage === "view" ? "full" : "cover"}
+        <Dialog.Root
+            lazyMount
+            size={usage === "view" ? "full" : "cover"}
             placement="center"
             scrollBehavior="inside"
-            motionPreset="slide-in-bottom" open={open}
+            motionPreset="slide-in-bottom"
+            open={open}
             onOpenChange={(e) => setOpen(e.open)}>
             <Dialog.Trigger asChild>
                 <div>{trigger}</div>
             </Dialog.Trigger>
+
             <Portal>
-                <Dialog.Backdrop />
-                <Dialog.Positioner>
-                    <Dialog.Content
-                        width="100vw"
-                        maxW="100vw"
-                        height="100vh"
-                        maxH="100vh"
-                        borderRadius="0"
-                        overflow="hidden"
-                        bg="bg"
-                    >
-                        <Dialog.Header>
-                            <Dialog.Title></Dialog.Title>
-                        </Dialog.Header>
-                        <Dialog.Body px={{ base: "3", md: "6" }} overflowY="auto">
-                            {currPost ? <DialogContent
-                                setOpen={setOpen} usage={usage} refetch={refetch} />
-                                : <p>Loading...</p>}
-                        </Dialog.Body>
-                        <Dialog.Footer>
-                        </Dialog.Footer>
-                        <Dialog.CloseTrigger asChild>
-                            <CloseButton bg="red.600" size="sm" />
-                        </Dialog.CloseTrigger>
-                    </Dialog.Content>
-                </Dialog.Positioner>
+                <Theme appearance={theme}>
+
+                    <Dialog.Backdrop />
+                    <Dialog.Positioner>
+                        <Dialog.Content
+                            width="100vw"
+                            maxW="100vw"
+                            height="100vh"
+                            maxH="100vh"
+                            borderRadius="0"
+                            overflow="hidden"
+                            bg="bg.emphasized"
+                        >
+                            <Dialog.Header>
+                                <Dialog.Title></Dialog.Title>
+                            </Dialog.Header>
+                            <Dialog.Body px={{ base: "3", md: "6" }} overflowY="auto">
+                                {currPost ? <DialogContent
+                                    setOpen={setOpen} usage={usage} refetch={refetch} />
+                                    : <p>Loading...</p>}
+                            </Dialog.Body>
+                            <Dialog.Footer>
+                            </Dialog.Footer>
+                            <Dialog.CloseTrigger asChild>
+                                <Button bg="purple.solid" color="bg" size="sm" >Close</Button>
+                            </Dialog.CloseTrigger>
+                        </Dialog.Content>
+                    </Dialog.Positioner>
+                </Theme>
             </Portal>
         </Dialog.Root>
+
     )
 }
 

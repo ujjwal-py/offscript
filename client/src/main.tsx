@@ -5,18 +5,14 @@ import { Provider } from './components/ui/provider.tsx'
 import './index.css'
 import App from './App.tsx'
 import AuthProvider from './context/AuthProvider.tsx'
-import { Theme } from '@chakra-ui/react'
+
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
     <StrictMode>
       <AuthProvider>
         <Provider>
-          <Theme appearance="dark">
-            <App />
-
-          </Theme>
-
+          <App />
         </Provider>
       </AuthProvider>
     </StrictMode>

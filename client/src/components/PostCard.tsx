@@ -26,7 +26,8 @@ function PostCard({ post }: { post: OpenablePost }) {
             margin="2"
             borderRadius="md"
             boxShadow="xl"
-            borderColor="bg.muted"
+            bg="bg.muted"
+            borderColor="bg.emphasized"
             boxShadowColor="bg.subtle"
             _hover={{ borderColor: "bg.inverted", cursor: "pointer" }} >
             {post.imageUrl && <Image src={`${BASE_URL}${post.imageUrl}`} fit="cover" maxHeight="1/3" />}

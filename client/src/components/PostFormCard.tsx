@@ -89,9 +89,12 @@ function PostFormCard({ refetch, usage, setOpen }: PostFromCardProps) {
         }
     }
     return (
-        <Card.Root maxWidth="100vw"
-            margin="2" borderWidth="1px"
-            borderColor="gray.200" borderRadius="md"
+        <Card.Root
+            maxWidth="100vw"
+            margin="2"
+            bg="bg.muted"
+            borderWidth="1px"
+            borderColor="border.emphasized" borderRadius="md"
             boxShadow="md" overflow="hidden">
             <Card.Header>
                 <Card.Title textAlign="center">{usage === "create" ? "Create" : "Update"}  Post</Card.Title>
