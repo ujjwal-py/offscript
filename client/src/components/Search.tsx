@@ -1,24 +1,18 @@
 import { LuSearch } from "react-icons/lu"
+import { useState } from "react";
 import { InputGroup, Input } from '@chakra-ui/react'
-
-import { useOptionStore } from '@/store/postStore';
+import useDebounce from "@/hooks/useDebounce";
 
 function Search() {
-    const setSearchValue = useOptionStore((state) => state.setQ)
-    const searchValue = useOptionStore((state) => state.q)
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchValue(e.target.value);
-    }
-
-
+    const [searchQuery, setSearchQuery] = useState("");
+    const q = useDebounce(searchQuery);
     return (
         <>
             <InputGroup endAddon={<LuSearch size="14" />} _hover={{ cursor: "pointer" }} >
                 <Input size="md"
                     placeholder="Search posts..."
-                    value={searchValue}
-                    onChange={handleChange}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                 />
             </InputGroup>
         </>
