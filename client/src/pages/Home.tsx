@@ -58,7 +58,7 @@ function Home() {
 
     return (
         <Flex direction="column" bg="bg" minH="100vh">
-            <Text textAlign="center" fontSize="4xl" fontWeight="bold">Posts</Text>
+            <Text textAlign="center" fontSize="4xl" fontWeight="bold">Home Feed</Text>
             <SearchOptions />
 
             {!loading && posts ? <Box as="ul" className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' bg="bg" >

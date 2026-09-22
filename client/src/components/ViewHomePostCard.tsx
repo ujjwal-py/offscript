@@ -58,7 +58,7 @@ function ViewPostCard() {
             objectFit="contain"
           />
         )}
-        <Text width="full" fontSize="md" overflowWrap="anywhere">
+        <Text textAlign="left" width="full" fontSize="lg" overflowWrap="anywhere" whiteSpace="pre-line">
           {post.description && post.description}
         </Text>
         <LikeButton post={post} />

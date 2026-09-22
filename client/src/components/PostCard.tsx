@@ -54,7 +54,7 @@ function PostCard({ post }: { post: OpenablePost }) {
             </Card.Body>
             <Card.Footer gap="1">
                 <Text fontSize="sm" color="gray.500">
-                    Posted on: {String(post.updatedAt).slice(0, 11)}
+                    Posted on: {String(post.updatedAt).slice(0, 10)}
                 </Text>
             </Card.Footer>
         </Card.Root>
