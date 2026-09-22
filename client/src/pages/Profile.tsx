@@ -3,7 +3,7 @@ import { useAuthStore } from '@/store/authStore';
 import { Text, Image, Card, Stack, Button, Flex, Box } from '@chakra-ui/react'
 import useFetch from '../hooks/useFetch';
 import UserPostDialogue from '@/components/PostDialogue';
-// import { api } from '@/Api';
+import { api } from '@/Api';
 import { useOptionStore, usePostStore, type PublishedPost } from '@/store/postStore';
 import SearchOptions from '@/components/SearchOptions';
 
@@ -48,10 +48,18 @@ function Profile() {
   const postsUrl = q.trim() ? "/search-user-posts" : "/published"
 
   const { data, loading, refetch } = useFetch<PublishedPost[]>(postsUrl, { sort_by, order, q })
-
+  const handleLogout = async () => {
+    try {
+      await api.post("/logout");
+      logOut(); // user store function
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
 
   return (
+
     <div className='min-h-screen'>
       <Flex alignItems="center"
         justifyContent="space-between"
@@ -64,7 +72,7 @@ function Profile() {
           fontSize="2xl"
           fontWeight="bold"
         >Welcome, {user?.name || "user"}</Text>
-        <Button variant="outline" bg="red.solid" color="bg" onClick={logOut}>Logout</Button>
+        <Button variant="outline" bg="red.solid" color="bg" onClick={handleLogout}>Logout</Button>
       </Flex>
 
       <Text marginLeft="2" textAlign="center" fontWeight="semibold" fontSize="2xl">Your Published Posts</Text>

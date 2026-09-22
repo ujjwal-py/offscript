@@ -12,12 +12,13 @@ import {
     Pagination,
     Text,
     Box,
-    Flex
+    Flex,
 } from "@chakra-ui/react"
 import { LuChevronRight, LuChevronLeft } from "react-icons/lu"
 import { useAuthStore } from '@/store/authStore';
 import { api } from '@/Api';
 import SearchOptions from '@/components/SearchOptions';
+import ErrorAlert from '@/components/ErrorAlert';
 
 
 function Home() {
@@ -29,7 +30,7 @@ function Home() {
     const sort_by = useOptionStore((state) => state.sortBy);
 
     const postsUrl = q.trim() ? "/search-public" : "/posts"; // if searchbox is empty then defaults to simple fetch
-    const { data, loading, refetch } = useFetch<HomePost[]>(postsUrl,
+    const { data, loading, refetch, error } = useFetch<HomePost[]>(postsUrl,
         { q, page, sort_by, order });
     const user = useAuthStore((state) => state.user);
     const setUser = useAuthStore((state) => state.setUser);
@@ -60,6 +61,8 @@ function Home() {
         <Flex direction="column" bg="bg" minH="100vh">
             <Text textAlign="center" fontSize="4xl" fontWeight="bold">Home Feed</Text>
             <SearchOptions />
+
+            {/* {error && <ErrorAlert errorMessage={error} />} */}
 
             {!loading && posts ? <Box as="ul" className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' bg="bg" >
                 {posts.map((post) => (

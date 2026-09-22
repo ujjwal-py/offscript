@@ -13,7 +13,6 @@ type mode = "signin" | "signup";
 function Sign() {
     const navigate = useNavigate();
     const [mode, setMode] = useState<mode>("signup");
-    // const { user, login } = useAuth();
     const setUser = useAuthStore((state) => state.setUser)
     const [formData, setFormData] = useState<SignInBody>({
         name: "",
@@ -37,10 +36,9 @@ function Sign() {
             else {
                 res = await api.post("/signup", formData);
             }
-            // context
+            // store
             setUser(res.data.user);
-            console.log(res.data)
-
+            // console.log(res.data.user)
             // resetting form
             setFormData({
                 name: "",
@@ -55,12 +53,6 @@ function Sign() {
         }
 
     }
-    // useEffect(() => {
-    //     if (user) {
-    //         navigate("/home");
-    //     }
-    // }, [user])
-    // const isSignUp = mode === "signup";
 
     return (
         <Box height="100vh">

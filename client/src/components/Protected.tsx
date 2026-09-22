@@ -29,7 +29,7 @@ function Protected() {
     if (loading) {
         return <div>Loading wait</div>
     }
-    if (!user) {
+    if (!loading && !user) {
         return <Navigate to="/auth" replace />;
     }
     return <Outlet />
