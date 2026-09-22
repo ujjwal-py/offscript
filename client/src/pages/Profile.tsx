@@ -2,12 +2,12 @@ import PublishedPostCard from '@/components/PublishedPostCard';
 import { useAuthStore } from '@/store/authStore';
 import { Text, Image, Card, Stack, Button, Flex, Box } from '@chakra-ui/react'
 import useFetch from '../hooks/useFetch';
-import UserPostDialogue, { type DialogContextProps } from '@/components/PostDialogue';
+import UserPostDialogue from '@/components/PostDialogue';
 // import { api } from '@/Api';
 import { useOptionStore, usePostStore, type PublishedPost } from '@/store/postStore';
 import SearchOptions from '@/components/SearchOptions';
 
-function ViewPostCard({ setOpen, refetch }: DialogContextProps) { // custom postcard to display published posts
+function ViewPostCard() { // custom postcard to display published posts
   const post = usePostStore((state) => state.currPost)
   if (!post) return <div>loading...</div>
   // const handleDelete = async () => {    // need to delete the post likes realtions before deleting the post
