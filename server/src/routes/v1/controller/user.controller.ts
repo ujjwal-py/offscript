@@ -29,6 +29,7 @@ export const createUser = async (req: Request<{}, any, UserBody>, res: Response)
     res.cookie("jwt_token", token, {
         maxAge: 24 * 60 * 60 * 1000,
         httpOnly: true,
+        sameSite: "none",
         secure: config.node_env === "production" ? true : false,
     })
     res.status(200).json({
@@ -56,6 +57,7 @@ export const logIn = async (req: Request<{}, any, UserBody>, res: Response) => {
     res.cookie("jwt_token", token, {
         maxAge: 24 * 60 * 60 * 1000,
         httpOnly: true,
+        sameSite: "none",
         secure: config.node_env === "production" ? true : false,
     })
     res.status(200).json({
@@ -96,6 +98,7 @@ export const getMe = async (req: Request, res: Response) => {
 export const logout = async (req: Request, res: Response) => {
     res.clearCookie("jwt_token", {
         httpOnly: true,
+        sameSite: "none",
         secure: config.node_env === "production" ? true : false,
     });
     res.status(200).json({ message: "Logged out" });
