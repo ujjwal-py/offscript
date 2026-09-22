@@ -3,41 +3,38 @@ import { useAuthStore } from '@/store/authStore';
 import { Text, Image, Card, Stack, Button, Flex, Box } from '@chakra-ui/react'
 import useFetch from '../hooks/useFetch';
 import UserPostDialogue, { type DialogContextProps } from '@/components/PostDialogue';
-import { api } from '@/Api';
+// import { api } from '@/Api';
 import { useOptionStore, usePostStore, type PublishedPost } from '@/store/postStore';
-import { BASE_URL } from '@/config';
 import SearchOptions from '@/components/SearchOptions';
 
 function ViewPostCard({ setOpen, refetch }: DialogContextProps) { // custom postcard to display published posts
   const post = usePostStore((state) => state.currPost)
   if (!post) return <div>loading...</div>
-  const handleDelete = async () => {
-    try {
-      const res = await api.delete(`/delete-post/${post.id}`);
-      console.log(res.data);
-      if (setOpen) {
-        console.log("Closing dialog");
-        setOpen(false);
-      }
-    } catch (err) {
-      console.log(err);
-    } finally {
-      if (refetch) {
-        refetch();
-      }
-    }
-  }
+  // const handleDelete = async () => {    // need to delete the post likes realtions before deleting the post
+  //   try {
+  //     const res = await api.delete(`/delete-post/${post.id}`);
+  //     console.log(res.data);
+  //     if (setOpen) {
+  //       console.log("Closing dialog");
+  //       setOpen(false);
+  //     }
+  //   } catch (err) {
+  //     console.log(err);
+  //   } finally {
+  //     if (refetch) {
+  //       refetch();
+  //     }
+  //   }
+  // }
   return (
     <>
       <Card.Root maxWidth="full" overflow="hidden" borderWidth="2px" borderRadius="md" padding='2' borderColor="grey.300" boxShadow="md" >
         <Stack alignItems="center" justifyContent="center" marginTop="4" gap="8">
           <Text fontSize="4xl" fontWeight="bold">{post.title}</Text>
-          {post.imageUrl && <Image src={`${BASE_URL}${post.imageUrl}`} alt={post.title} />}
+          {post.imageUrl && <Image src={post.imageUrl} alt={post.title} />}
           <Text fontSize="md">{post.description}</Text>
         </Stack >
-        <Card.Footer justifyContent="flex-end">
-          <Button variant="outline" bg="red" onClick={handleDelete} >Delete</Button>
-        </Card.Footer>
+
       </Card.Root >
     </>
   )

@@ -54,8 +54,6 @@ export const editPost = async (req: Request<{ id: string }, any, UpdatePostBody>
     const { title, description, published } = req.body;
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
-
-
     const post = await prisma.posts.update({
         where: {
             id,
@@ -103,7 +101,8 @@ export const getAllPosts = async (req: Request, res: Response) => {
                     userId: true,
                     postId: true
                 }
-            }
+            },
+            updatedAt: true,
         }
     });
     res.status(200).json(posts);

@@ -44,7 +44,7 @@ function PostCard({ post }: { post: OpenablePost }) {
                 <Card.Description>
                     <Stack width="full">
                         <Text fontSize="sm" fontWeight="semibold">
-                            {homePost.author.name || "user"} - {homePost.author.email}
+                            {homePost.author.name || "user"}
                         </Text>
                         <Text truncate fontSize="md" color="gray.50">
                             {post.description}
@@ -54,7 +54,7 @@ function PostCard({ post }: { post: OpenablePost }) {
             </Card.Body>
             <Card.Footer gap="1">
                 <Text fontSize="sm" color="gray.500">
-                    Likes/Tags
+                    Posted on: {String(post.updatedAt).slice(0, 11)}
                 </Text>
             </Card.Footer>
         </Card.Root>
