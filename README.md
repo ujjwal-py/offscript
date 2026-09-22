@@ -28,7 +28,7 @@ offscript/
 - Create, edit, publish, and delete posts
 - Draft and published post views
 - Public post search with sorting and ordering
-- Like and unlike posts
+- Real time like and unlike posts without refetching
 - Image uploads with file type and size validation
 - Responsive layout for desktop and mobile screens
 - Client-side routing with React Router
