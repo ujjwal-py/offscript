@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { prisma } from "../../../lib/prisma";
 import { NewPostBody, UpdatePostBody } from "../../../schemas/post.schema";
 import { CustomError, UnauthorizedError } from "../../../errors/CustomErrors";
-import { Prisma } from "../../../../generated/prisma/client";
+import { Prisma } from "../../../generated/prisma/client";
 import { supabase } from "../../../lib/supabase";
 
 
