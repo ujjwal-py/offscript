@@ -58,37 +58,42 @@ function Profile() {
   }
 
 
+
+
   return (
+    <>
 
-    <div className='min-h-screen'>
-      <Flex alignItems="center"
-        justifyContent="space-between"
-        padding="4"
-        margin="2"
-        borderWidth="2px"
-        borderColor="bg.inverted"
-        borderRadius="md">
-        <Text textAlign="center"
-          fontSize="2xl"
-          fontWeight="bold"
-        >Welcome, {user?.name || "user"}</Text>
-        <Button variant="outline" bg="red.solid" color="bg" onClick={handleLogout}>Logout</Button>
-      </Flex>
+      <div className='min-h-screen'>
+        <Flex alignItems="center"
+          justifyContent="space-between"
+          padding="4"
+          margin="2"
+          borderWidth="2px"
+          borderColor="bg.inverted"
+          borderRadius="md">
+          <Text textAlign="center"
+            fontSize="2xl"
+            fontWeight="bold"
+          >Welcome, {user?.name || "user"}</Text>
+          <Button variant="outline" bg="red.solid" color="bg" onClick={handleLogout}>Logout</Button>
+        </Flex>
 
-      <Text marginLeft="2" textAlign="center" fontWeight="semibold" fontSize="2xl">Your Published Posts</Text>
-      <SearchOptions />
+        <Text marginLeft="2" textAlign="center" fontWeight="semibold" fontSize="2xl">Your Published Posts</Text>
+        <SearchOptions />
 
-      {loading === false && data ?
-        <Box as="ul" className='p-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4' >
-          {data.map((post) => (
-            <UserPostDialogue key={post.id} post={post}
-              usage="update" trigger={<PublishedPostCard post={post} />}
-              refetch={refetch}
-              DialogContent={ViewPostCard} />
-          ))}
-        </Box> : <h3>hold tight,fetching your posts</h3>
-      }
-    </div>
+        {loading === false && data ?
+          <Box as="ul" className='p-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4' >
+            {data.map((post) => (
+              <UserPostDialogue key={post.id} post={post}
+                usage="update" trigger={<PublishedPostCard post={post} />}
+                refetch={refetch}
+                DialogContent={ViewPostCard} />
+            ))}
+          </Box> : <h3>hold tight,fetching your posts</h3>
+        }
+      </div>
+    </>
+
   )
 }
 

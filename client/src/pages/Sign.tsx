@@ -3,6 +3,9 @@ import { Button, Card, Field, Input, Stack, Text, Box } from '@chakra-ui/react'
 import { api } from '../Api'
 import { useAuthStore } from '@/store/authStore';
 import { useNavigate } from 'react-router-dom';
+import { toaster } from '@/components/ui/toaster';
+import { AxiosError } from 'axios';
+import type { errorType } from '@/store/errorStore';
 type SignInBody = {
     name?: string,
     email: string,
@@ -38,7 +41,6 @@ function Sign() {
             }
             // store
             setUser(res.data.user);
-            // console.log(res.data.user)
             // resetting form
             setFormData({
                 name: "",
@@ -48,89 +50,107 @@ function Sign() {
 
             navigate("/profile")
 
+            toaster.create({
+                title: `${mode} successfully`,
+                type: "success"
+            })
+
         } catch (err) {
-            console.log(err);
+            // console.log(err);
+            if (err instanceof AxiosError) {
+                const Error: errorType = err.response?.data;
+                toaster.create({
+                    title: Error.message || "Something went wrong",
+                    description: Error.errCode || err.message,
+                    type: "error"
+                })
+            }
         }
 
     }
 
-    return (
-        <Box height="100vh">
-            <Card.Root
-                maxWidth="md"
-                margin="4"
-                mx="auto"
-                borderWidth="1px"
-                bg="bg.muted"
-                borderColor="gray.200"
-                borderRadius="md"
-                boxShadow="md">
-                <Card.Header>
-                    <Card.Title textAlign="center">
-                        {mode === "signup" ? "Create an account" : "Welcome back"}
-                    </Card.Title>
-                    <Card.Description textAlign="center">
-                        {mode === "signup" ? "Sign up to get started" : "Sign in to continue"}
-                    </Card.Description>
-                </Card.Header>
 
-                <form onSubmit={handleSubmit}>
-                    <Card.Body>
-                        <Stack gap="4" w="full">
-                            {mode === "signup" &&
+    return (
+        <>
+
+            <Box height="100vh">
+                <Card.Root
+                    maxWidth="md"
+                    margin="4"
+                    mx="auto"
+                    borderWidth="1px"
+                    bg="bg.muted"
+                    borderColor="gray.200"
+                    borderRadius="md"
+                    boxShadow="md">
+                    <Card.Header>
+                        <Card.Title textAlign="center">
+                            {mode === "signup" ? "Create an account" : "Welcome back"}
+                        </Card.Title>
+                        <Card.Description textAlign="center">
+                            {mode === "signup" ? "Sign up to get started" : "Sign in to continue"}
+                        </Card.Description>
+                    </Card.Header>
+
+                    <form onSubmit={handleSubmit}>
+                        <Card.Body>
+                            <Stack gap="4" w="full">
+                                {mode === "signup" &&
+                                    <Field.Root required>
+                                        <Field.Label>Name</Field.Label>
+                                        <Input
+                                            type="text"
+                                            name="name"
+                                            value={formData.name}
+                                            placeholder="Enter your name"
+                                            onChange={handleChange}
+                                        />
+                                    </Field.Root>
+                                }
+
                                 <Field.Root required>
-                                    <Field.Label>Name</Field.Label>
+                                    <Field.Label>Email</Field.Label>
                                     <Input
-                                        type="text"
-                                        name="name"
-                                        value={formData.name}
-                                        placeholder="Enter your name"
+                                        type="email"
+                                        name="email"
+                                        value={formData.email}
+                                        placeholder="Enter your email"
                                         onChange={handleChange}
                                     />
                                 </Field.Root>
-                            }
 
-                            <Field.Root required>
-                                <Field.Label>Email</Field.Label>
-                                <Input
-                                    type="email"
-                                    name="email"
-                                    value={formData.email}
-                                    placeholder="Enter your email"
-                                    onChange={handleChange}
-                                />
-                            </Field.Root>
+                                <Field.Root required>
+                                    <Field.Label>Password</Field.Label>
+                                    <Input
+                                        type="password"
+                                        name="password"
+                                        value={formData.password}
+                                        placeholder="Enter your password"
+                                        onChange={handleChange}
+                                    />
+                                </Field.Root>
+                            </Stack>
+                        </Card.Body>
 
-                            <Field.Root required>
-                                <Field.Label>Password</Field.Label>
-                                <Input
-                                    type="password"
-                                    name="password"
-                                    value={formData.password}
-                                    placeholder="Enter your password"
-                                    onChange={handleChange}
-                                />
-                            </Field.Root>
-                        </Stack>
-                    </Card.Body>
+                        <Card.Footer flexDirection="column" gap="3">
+                            <Button type="submit" width="full">
+                                {mode === "signup" ? "Sign up" : "Sign in"}
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                onClick={() => setMode(mode === "signup" ? "signin" : "signup")}
+                            >
+                                <Text>
+                                    {mode === "signup" ? "Already registered? Sign in" : "Need an account? Sign up"}
+                                </Text>
+                            </Button>
+                        </Card.Footer>
+                    </form>
+                </Card.Root>
+            </Box>
+        </>
 
-                    <Card.Footer flexDirection="column" gap="3">
-                        <Button type="submit" width="full">
-                            {mode === "signup" ? "Sign up" : "Sign in"}
-                        </Button>
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            onClick={() => setMode(mode === "signup" ? "signin" : "signup")}
-                        >
-                            <Text>
-                                {mode === "signup" ? "Already registered? Sign in" : "Need an account? Sign up"}
-                            </Text>
-                        </Button>
-                    </Card.Footer>
-                </form>
-            </Card.Root>
-        </Box>
 
     )
 }

@@ -6,9 +6,11 @@ import {
 import { useState } from "react"
 import { HiUpload } from 'react-icons/hi'
 import { api } from "@/Api";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import type { DialogContextProps } from "@/components/PostDialogue"
 import { usePostStore, type DraftPost } from "@/store/postStore";
+import { toaster } from "./ui/toaster";
+import type { errorType } from "@/store/errorStore";
 
 type PostFromCardProps = DialogContextProps
 
@@ -58,12 +60,18 @@ function PostFormCard({ refetch, usage, setOpen }: PostFromCardProps) {
             if (refetch) {
                 refetch();
             }
-            window.alert("Post created successfully")
+            toaster.create({
+                title: "Post created Successfully",
+                type: "success"
+            })
         } catch (err) {
             if (axios.isAxiosError(err)) {
-                console.error("Status:", err.response?.status);
-                console.error("Validation response:", err.response?.data);
-                console.error("Validation errors:", err.response?.data?.Errors);
+                const Error: errorType = err.response?.data;
+                toaster.create({
+                    title: Error.message,
+                    description: Error.errCode,
+                    type: "error"
+                })
             } else {
                 console.error(err);
             }
@@ -72,14 +80,27 @@ function PostFormCard({ refetch, usage, setOpen }: PostFromCardProps) {
     }
     const handleDelete = async () => {
         try {
-            const res = await api.delete(`/delete-post/${data.id}`);
-            console.log(res.data);
+            await api.delete(`/delete-post/${data.id}`);
+            // console.log(res.data);
+
             if (setOpen) {
                 console.log("Closing dialog");
                 setOpen(false);
             }
+            toaster.create({
+                title: "post has been deleted",
+                type: "success"
+            })
         } catch (err) {
-            console.log(err);
+            // console.log(err);
+            if (err instanceof AxiosError) {
+                const Error: errorType = err.response?.data;
+                toaster.create({
+                    title: Error.message,
+                    description: Error.errCode,
+                    type: "error"
+                })
+            }
         } finally {
             if (refetch) {
                 refetch();

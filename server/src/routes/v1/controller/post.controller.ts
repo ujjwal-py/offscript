@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { prisma } from "../../../lib/prisma";
 import { NewPostBody, UpdatePostBody } from "../../../schemas/post.schema";
-import { CustomError, UnauthorizedError } from "../../../errors/CustomErrors";
+import { CustomError, NotFoundError, UnauthorizedError } from "../../../errors/CustomErrors";
 import { Prisma } from "../../../generated/prisma/client";
 import { supabase } from "../../../lib/supabase";
 
@@ -25,8 +25,8 @@ export const createPost = async (req: Request<{}, any, NewPostBody>, res: Respon
             });
 
         if (error) {
-            console.error(error);
-            throw new CustomError(500, "SUPABASE_UPLOAD_ERROR", "Failed to upload image to Supabase");
+            // console.error(error);
+            throw new CustomError(500, "SUPABASE_UPLOAD_ERROR", "Failed to upload image");
         }
         imageUrl = supabase.storage
             .from(process.env.SUPABASE_BUCKET!)
@@ -110,7 +110,8 @@ export const getAllPosts = async (req: Request, res: Response) => {
 export const searchPublicPosts = async (req: Request, res: Response) => {
     const q = String(req.query.q || "").trim();
     if (!q) {
-        return res.status(400).json({ message: "Search query is required" });
+        // return res.status(400).json({ message: "Search query is required" });
+        throw new CustomError(400, "SEARCH_QUERY_REQUIRED", "Search query is required");
     }
     const order: Prisma.SortOrder = req.query.order === "asc" ? "asc" : "desc";
     const sortBy = req.query.sort_by;
@@ -196,7 +197,7 @@ export const searchUserPosts = async (req: Request, res: Response) => {
     const authorId = req.user?.user_id;
     const q = String(req.query.q || "").trim();
     if (!q) {
-        return res.status(400).json({ message: "Search query is required" });
+        throw new CustomError(400, "SEARCH_QUERY_REQUIRED", "Search query is required");
     }
     const order: Prisma.SortOrder = req.query.order === "asc" ? "asc" : "desc";
     const sortBy = req.query.sort_by === "updatedAt" ? "updatedAt" : "likes";
@@ -222,9 +223,6 @@ export const searchUserPosts = async (req: Request, res: Response) => {
     })
     res.status(200).json(posts);
 }
-
-
-
 
 export const deletePost = async (req: Request<{ id: string }>, res: Response) => {
     const authorId = req.user?.user_id;
@@ -257,7 +255,7 @@ export const likePost = async (req: Request<{ id: string }>, res: Response) => {
         }
     });
     if (!validPost) {
-        throw new CustomError(404, "POST_NOT_FOUND", "Post not found or not published");
+        throw new NotFoundError("Post not found or not published");
     }
     const existingLike = await prisma.likes.findUnique({
         where: {
@@ -293,7 +291,7 @@ export const dislikePost = async (req: Request<{ id: string }>, res: Response) =
         }
     });
     if (!validPost) {
-        throw new CustomError(404, "POST_NOT_FOUND", "Post not found or not published");
+        throw new NotFoundError("Post not found or not published");
     }
     const existingLike = await prisma.likes.findUnique({
         where: {

@@ -11,6 +11,7 @@ import {
 
 export const toaster = createToaster({
   placement: "bottom-end",
+  max: 3,
   pauseOnPageIdle: true,
 })
 

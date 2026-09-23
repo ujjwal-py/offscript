@@ -5,6 +5,10 @@ import { BsSuitHeart, BsSuitHeartFill } from "react-icons/bs";
 import { api } from '@/Api';
 import { useLikeStore, type HomePost } from '@/store/postStore';
 import { useAuthStore } from '@/store/authStore';
+import type { errorType } from '@/store/errorStore';
+import { AxiosError } from 'axios';
+import { toaster } from './ui/toaster';
+
 
 function LikeButton({ post }: { post: HomePost }) {
     const user = useAuthStore((state) => state.user);
@@ -15,9 +19,11 @@ function LikeButton({ post }: { post: HomePost }) {
     const [pending, setPending] = useState(false);
     const like = Boolean(user && likes.some((item) => item.userId === user.id));
 
+
     useEffect(() => {
         setLikes(post.id, post.Likes);
     }, [post.id, post.Likes, setLikes]);
+
 
     const handleLike = async () => {
         if (!user || pending) return;
@@ -31,9 +37,23 @@ function LikeButton({ post }: { post: HomePost }) {
                 await api.delete(`/dislike-post/${post.id}`);
                 removeLike({ postId: post.id, userId: user.id })
             }
+            toaster.create({
+                title: `Post ${like === true ? "Unliked" : "Liked"}`,
+                type: "success"
+            })
 
-        } catch (error) {
-            console.error("Error liking/disliking post:", error);
+
+        } catch (err) {
+            // console.error("Error liking/disliking post:", error);
+            if (err instanceof AxiosError) {
+                const Error: errorType = err.response?.data;
+                toaster.create({
+                    title: Error.message,
+                    description: Error.errCode,
+                    type: "error"
+                })
+            }
+
         } finally {
             setPending(false);
         }

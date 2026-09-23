@@ -47,11 +47,11 @@ export const logIn = async (req: Request<{}, any, UserBody>, res: Response) => {
         }
     })
     if (!user) {
-        throw new NotFoundError("User Not Found");
+        throw new NotFoundError("Invalid Email or Password");
     }
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
-        throw new UnauthorizedError("Invalid Password");
+        throw new UnauthorizedError("Invalid Email or Password");
     }
     const token = jwt.sign({ user_id: user.id }, config.jwt_secret)
     res.cookie("jwt_token", token, {

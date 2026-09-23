@@ -7,6 +7,7 @@ import Profile from './pages/Profile';
 import Protected from './components/Protected';
 import { Theme } from '@chakra-ui/react';
 import { useThemeStore } from './store/themeStore';
+import { Toaster } from './components/ui/toaster';
 
 function App() {
   const { theme } = useThemeStore();
@@ -23,6 +24,7 @@ function App() {
             <Route path='/profile' element={<Profile />} />
           </Route>
         </Routes>
+        <Toaster />
       </Theme>
     </>
   )

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Alert } from '@chakra-ui/react'
 
-function ErrorAlert({ errorMessage }: { errorMessage: unknown }) {
+function ErrorAlert({ errorMessage }: { errorMessage: string }) {
     return (
         <>
             <Alert.Root status="error">
@@ -9,7 +9,7 @@ function ErrorAlert({ errorMessage }: { errorMessage: unknown }) {
                 <Alert.Content>
                     <Alert.Title>An Error Occured</Alert.Title>
                     <Alert.Description>
-                        {String(errorMessage)}
+                        {errorMessage}
                     </Alert.Description>
                 </Alert.Content>
             </Alert.Root>

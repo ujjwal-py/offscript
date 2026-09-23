@@ -5,11 +5,15 @@ import PostFormCard from '@/components/PostFormCard';
 import UserPostDialogue from '@/components/PostDialogue';
 import type { DraftPost } from '@/store/postStore';
 
+
 function MyPosts() {
     const { data, loading, refetch } = useFetch<DraftPost[]>("/drafts");
 
+
+
     return (
         <div>
+
             <PostFormCard refetch={refetch} usage="create" />
 
             {/* display posts  */}

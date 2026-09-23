@@ -6,7 +6,6 @@ export class CustomError extends Error {
     ) {
         super(message);
         Object.setPrototypeOf(this, new.target.prototype);
-
     }
 }
 
@@ -17,7 +16,7 @@ export class NotFoundError extends CustomError {
 }
 
 export class UnauthorizedError extends CustomError {
-    constructor(message = "Unauthorized") {
+    constructor(message = "Unauthorized: Sign in to acess all features") {
         super(401, "UA401", message);
     }
 }
