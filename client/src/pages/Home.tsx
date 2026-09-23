@@ -15,10 +15,7 @@ import {
     Flex,
 } from "@chakra-ui/react"
 import { LuChevronRight, LuChevronLeft } from "react-icons/lu"
-import { useAuthStore } from '@/store/authStore';
-import { api } from '@/Api';
 import SearchOptions from '@/components/SearchOptions';
-
 function Home() {
     const [page, setPage] = useState<number>(1);
     const posts = usePostStore((state) => state.posts);
@@ -30,31 +27,12 @@ function Home() {
     const postsUrl = q.trim() ? "/search-public" : "/posts"; // if searchbox is empty then defaults to simple fetch
     const { data, loading, refetch } = useFetch<HomePost[]>(postsUrl,
         { q, page, sort_by, order });
-    const user = useAuthStore((state) => state.user);
-    const setUser = useAuthStore((state) => state.setUser);
-
-
-
     useEffect(() => {
         if (data) {
             setPosts(data);
         }
 
     }, [data])
-
-    useEffect(() => { // need to check if the user is signed in or not to
-        // fix the posts liking without sigin
-        if (user) return;
-
-        api.get("/me")
-            .then((response) => {
-                setUser(response.data);
-            })
-            .catch(() => {
-                // User is not authenticated
-                console.log("not authenticated")
-            });
-    }, [user, setUser]);
 
     return (
         <Flex direction="column" bg="bg" minH="100vh">

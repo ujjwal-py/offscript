@@ -24,7 +24,15 @@ function LikeButton({ post }: { post: HomePost }) {
 
 
     const handleLike = async () => {
-        if (!user || pending) return;
+        if (!user) {
+            toaster.create({
+                title: "Please sign in to like posts",
+                type: "error",
+            });
+            return;
+        }
+
+        if (pending) return;
 
         setPending(true);
         try {
@@ -41,8 +49,9 @@ function LikeButton({ post }: { post: HomePost }) {
             })
 
 
-        } catch {
+        } catch (err) {
             // The Axios interceptor displays the error toast.
+            console.log(err)
 
         } finally {
             setPending(false);
@@ -52,7 +61,7 @@ function LikeButton({ post }: { post: HomePost }) {
         <HStack justifyContent="center" alignItems="center" gap="2">
             <Text fontSize="md" fontWeight="semibold">{like ? "Unlike" : "Like"}</Text>
             <IconContext.Provider value={{ color: "red", style: { cursor: "pointer", background: "none" } }}>
-                <Button bg="bg.subtle" _hover={{ bg: "bg.muted" }} onClick={handleLike} disabled={!user || pending}>
+                <Button bg="bg.subtle" _hover={{ bg: "bg.muted" }} onClick={handleLike} disabled={pending}>
                     {like ? <BsSuitHeartFill /> : <BsSuitHeart />}
                 </Button>
             </IconContext.Provider>
