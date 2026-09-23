@@ -2,9 +2,6 @@ import { useAuthStore } from '@/store/authStore';
 import { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { api } from '@/Api';
-import axios from 'axios';
-import { toaster } from './ui/toaster';
-import type { errorType } from '@/store/errorStore';
 
 function Protected() {
     const { user, setUser } = useAuthStore();
@@ -21,15 +18,8 @@ function Protected() {
                     setUser(userData);
 
                 }
-            } catch (error) {
-                if (axios.isAxiosError(error)) {
-                    const Error: errorType = error.response?.data;
-                    toaster.create({
-                        title: Error.message,
-                        description: Error.errCode,
-                        type: "error"
-                    })
-                }
+            } catch {
+                // The Axios interceptor displays the error toast.
             } finally {
                 setLoading(false);
             }

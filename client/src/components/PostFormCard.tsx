@@ -6,11 +6,9 @@ import {
 import { useState } from "react"
 import { HiUpload } from 'react-icons/hi'
 import { api } from "@/Api";
-import axios, { AxiosError } from "axios";
 import type { DialogContextProps } from "@/components/PostDialogue"
 import { usePostStore, type DraftPost } from "@/store/postStore";
 import { toaster } from "./ui/toaster";
-import type { errorType } from "@/store/errorStore";
 
 type PostFromCardProps = DialogContextProps
 
@@ -64,18 +62,8 @@ function PostFormCard({ refetch, usage, setOpen }: PostFromCardProps) {
                 title: "Post created Successfully",
                 type: "success"
             })
-        } catch (err) {
-            if (axios.isAxiosError(err)) {
-                const Error: errorType = err.response?.data;
-                toaster.create({
-                    title: Error.message,
-                    description: Error.errCode,
-                    type: "error"
-                })
-            } else {
-                console.error(err);
-            }
-
+        } catch {
+            // The Axios interceptor displays the error toast.
         }
     }
     const handleDelete = async () => {
@@ -91,16 +79,8 @@ function PostFormCard({ refetch, usage, setOpen }: PostFromCardProps) {
                 title: "post has been deleted",
                 type: "success"
             })
-        } catch (err) {
-            // console.log(err);
-            if (err instanceof AxiosError) {
-                const Error: errorType = err.response?.data;
-                toaster.create({
-                    title: Error.message,
-                    description: Error.errCode,
-                    type: "error"
-                })
-            }
+        } catch {
+            // The Axios interceptor displays the error toast.
         } finally {
             if (refetch) {
                 refetch();

@@ -4,8 +4,6 @@ import { api } from '../Api'
 import { useAuthStore } from '@/store/authStore';
 import { useNavigate } from 'react-router-dom';
 import { toaster } from '@/components/ui/toaster';
-import { AxiosError } from 'axios';
-import type { errorType } from '@/store/errorStore';
 type SignInBody = {
     name?: string,
     email: string,
@@ -55,16 +53,8 @@ function Sign() {
                 type: "success"
             })
 
-        } catch (err) {
-            // console.log(err);
-            if (err instanceof AxiosError) {
-                const Error: errorType = err.response?.data;
-                toaster.create({
-                    title: Error.message || "Something went wrong",
-                    description: Error.errCode || err.message,
-                    type: "error"
-                })
-            }
+        } catch {
+            // The Axios interceptor displays the error toast.
         }
 
     }

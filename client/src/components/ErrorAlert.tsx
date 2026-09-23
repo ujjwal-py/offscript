@@ -1,4 +1,3 @@
-import React from 'react'
 import { Alert } from '@chakra-ui/react'
 
 function ErrorAlert({ errorMessage }: { errorMessage: string }) {

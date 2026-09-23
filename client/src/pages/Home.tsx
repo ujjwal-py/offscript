@@ -18,7 +18,6 @@ import { LuChevronRight, LuChevronLeft } from "react-icons/lu"
 import { useAuthStore } from '@/store/authStore';
 import { api } from '@/Api';
 import SearchOptions from '@/components/SearchOptions';
-import { toaster } from '@/components/ui/toaster';
 
 function Home() {
     const [page, setPage] = useState<number>(1);
@@ -54,10 +53,6 @@ function Home() {
             .catch(() => {
                 // User is not authenticated
                 console.log("not authenticated")
-                toaster.create({
-                    title: "Sign in for more features",
-                    type: "info"
-                })
             });
     }, [user, setUser]);
 
