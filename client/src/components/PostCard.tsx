@@ -41,16 +41,15 @@ function PostCard({ post }: { post: OpenablePost }) {
                     </Text>
                 </Card.Title>
 
-                <Card.Description>
-                    <Stack width="full">
-                        <Text fontSize="sm" fontWeight="semibold">
-                            {homePost.author.name || "user"}
-                        </Text>
-                        <Text truncate fontSize="md" color="gray.50">
-                            {post.description}
-                        </Text>
-                    </Stack>
-                </Card.Description>
+
+                <Stack width="full">
+                    <Text fontSize="sm" fontWeight="semibold">
+                        {homePost.author.name || "user"}
+                    </Text>
+                    <Text truncate fontSize="md" color="gray.50">
+                        {post.description}
+                    </Text>
+                </Stack>
             </Card.Body>
             <Card.Footer gap="1">
                 <Text fontSize="sm" color="gray.500">
