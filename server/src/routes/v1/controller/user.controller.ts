@@ -25,7 +25,7 @@ export const createUser = async (req: Request<{}, any, UserBody>, res: Response)
             password: hashedPassword
         },
     });
-    const token = jwt.sign({ user_id: newUser.id }, config.jwt_secret)
+    const token = jwt.sign({ user_id: newUser.id, role: newUser.role }, config.jwt_secret)
     res.cookie("jwt_token", token, {
         maxAge: 24 * 60 * 60 * 1000,
         httpOnly: true,
@@ -53,7 +53,7 @@ export const logIn = async (req: Request<{}, any, UserBody>, res: Response) => {
     if (!match) {
         throw new UnauthorizedError("Invalid Email or Password");
     }
-    const token = jwt.sign({ user_id: user.id }, config.jwt_secret)
+    const token = jwt.sign({ user_id: user.id, role: user.role }, config.jwt_secret)
     res.cookie("jwt_token", token, {
         maxAge: 24 * 60 * 60 * 1000,
         httpOnly: true,
@@ -86,7 +86,8 @@ export const getMe = async (req: Request, res: Response) => {
             id: true,
             name: true,
             email: true,
-            createdAt: true
+            createdAt: true,
+            role: true
         }
     });
     if (!user) {

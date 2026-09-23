@@ -1,6 +1,6 @@
 export interface AuthUser {
     user_id: string;
-    // whatever you actually put in the JWT payload
+    role: "ADMIN" | "USER";
 }
 
 declare global {

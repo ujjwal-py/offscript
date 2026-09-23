@@ -18,3 +18,12 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
         throw new UnauthorizedError("Invalid or Expired Token");
     }
 };
+
+export const requireRole = (allowedRole: string) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        if (!req.user || req.user.role !== allowedRole) {
+            throw new CustomError(403, "INSUFFICIENT_PERMISSIONS", "Insufficient permissions for this action");
+        }
+        next();
+    };
+}

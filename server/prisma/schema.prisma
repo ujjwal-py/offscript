@@ -19,7 +19,13 @@ model User {
   name      String?
   posts     Posts[]
   Likes     Likes[]
+  role      Role     @default(USER)
   createdAt DateTime @default(now())
+}
+
+enum Role {
+  USER
+  ADMIN
 }
 
 model Posts {

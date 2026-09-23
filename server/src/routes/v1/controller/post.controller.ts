@@ -224,17 +224,67 @@ export const searchUserPosts = async (req: Request, res: Response) => {
     res.status(200).json(posts);
 }
 
-export const deletePost = async (req: Request<{ id: string }>, res: Response) => {
+export const deletePostAdmin = async (req: Request<{ id: string }>, res: Response) => {
     const authorId = req.user?.user_id;
     if (!authorId) {
         throw new UnauthorizedError();
     }
     const id = parseInt(req.params.id, 10);
 
+    const existingPost = await prisma.posts.findUnique({
+        where: {
+            id,
+        }
+    });
+
+    if (!existingPost) {
+        throw new NotFoundError("Post not found");
+    }
+
+    // first delete the likes associated with the post 
+    const deleteLikes = await prisma.likes.deleteMany({
+        where: {
+            postId: id
+        }
+    });
+
+    // delete post
     const post = await prisma.posts.delete({
         where: {
             id,
-            authorId,
+        }
+    });
+
+    res.status(200).json({ message: "Post deleted successfully" });
+}
+
+export const deletePostUser = async (req: Request<{ id: string }>, res: Response) => {
+    const authorId = req.user?.user_id;
+    const id = parseInt(req.params.id, 10);
+
+    const existingPost = await prisma.posts.findUnique({
+        where: {
+            id,
+            authorId
+        }
+    });
+
+    if (!existingPost) {
+        throw new NotFoundError("Post not found or it does not belong to the user");
+    }
+
+    // first delete the likes associated with the post 
+    const deleteLikes = await prisma.likes.deleteMany({
+        where: {
+            postId: id,
+        }
+    });
+
+    // delete post
+    const post = await prisma.posts.delete({
+        where: {
+            id,
+            authorId
         }
     });
 

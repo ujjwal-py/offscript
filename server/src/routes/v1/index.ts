@@ -12,13 +12,14 @@ import {
     editPost,
     userDraftPosts,
     userPublishedPosts,
-    deletePost,
+    deletePostAdmin,
     dislikePost,
     likePost,
     searchPublicPosts,
     searchUserPosts,
+    deletePostUser
 } from "./controller/post.controller";
-import { authenticate } from "../../middlewares/auth";
+import { authenticate, requireRole } from "../../middlewares/auth";
 import { validate } from "../../middlewares/validate";
 import { createPostSchema, updatePostSchema } from "../../schemas/post.schema";
 import { UserSchema } from "../../schemas/user.schema";
@@ -40,7 +41,8 @@ v1.get("/posts", getAllPosts)
 v1.get("/drafts", authenticate, userDraftPosts)
 v1.get("/published", authenticate, userPublishedPosts)
 v1.put("/update-post/:id", authenticate, upload.single("image"), validate(updatePostSchema), editPost)
-v1.delete("/delete-post/:id", authenticate, deletePost)
+v1.delete("/delete-post-admin/:id", authenticate, requireRole("ADMIN"), deletePostAdmin);
+v1.delete("/delete-post/:id", authenticate, deletePostUser);
 v1.post("/like-post/:id", authenticate, likePost)
 v1.delete("/dislike-post/:id", authenticate, dislikePost)
 v1.get("/search-public", searchPublicPosts)
