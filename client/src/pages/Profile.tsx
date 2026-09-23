@@ -6,6 +6,8 @@ import UserPostDialogue from '@/components/PostDialogue';
 import { api } from '@/Api';
 import { useOptionStore, usePostStore, type PublishedPost } from '@/store/postStore';
 import SearchOptions from '@/components/SearchOptions';
+import LoadingScreen from '@/components/LoadingScreen';
+import EmptyState from '@/components/EmptyState';
 
 function ViewPostCard() { // custom postcard to display published posts
   const post = usePostStore((state) => state.currPost)
@@ -81,7 +83,7 @@ function Profile() {
         <Text marginLeft="2" textAlign="center" fontWeight="semibold" fontSize="2xl">Your Published Posts</Text>
         <SearchOptions />
 
-        {loading === false && data ?
+        {loading ? <LoadingScreen message="Loading posts or data please wait" /> : data && data.length > 0 ?
           <Box as="ul" className='p-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4' >
             {data.map((post) => (
               <UserPostDialogue key={post.id} post={post}
@@ -89,7 +91,7 @@ function Profile() {
                 refetch={refetch}
                 DialogContent={ViewPostCard} />
             ))}
-          </Box> : <h3>hold tight,fetching your posts</h3>
+        </Box> : <EmptyState />
         }
       </div>
     </>

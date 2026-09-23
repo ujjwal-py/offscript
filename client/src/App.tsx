@@ -8,6 +8,8 @@ import Protected from './components/Protected';
 import { Theme } from '@chakra-ui/react';
 import { useThemeStore } from './store/themeStore';
 import { Toaster } from './components/ui/toaster';
+import AdminDashboard from './pages/AdminDashboard';
+import AdminProtected from './components/AdminProtected';
 
 function App() {
   const { theme } = useThemeStore();
@@ -22,6 +24,9 @@ function App() {
           <Route element={<Protected />}>
             <Route path='/my-posts' element={<MyPosts />} />
             <Route path='/profile' element={<Profile />} />
+            <Route element={<AdminProtected />}>
+              <Route path='/admin' element={<AdminDashboard />} />
+            </Route>
           </Route>
         </Routes>
         <Toaster />

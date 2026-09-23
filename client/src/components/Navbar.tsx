@@ -3,12 +3,14 @@ import { Button, Card, Flex, Text, Box } from '@chakra-ui/react'
 import { useThemeStore } from '@/store/themeStore'
 import { BsFillMoonStarsFill } from "react-icons/bs";
 import { FiSun } from "react-icons/fi";
+import { useAuthStore } from '@/store/authStore';
 
 
 
 function Navbar() {
     // const navigate = useNavigate();
     const { theme, setTheme } = useThemeStore();
+    const user = useAuthStore((state) => state.user);
 
     return (
         <Box bg="bg" color="fg" padding="2">
@@ -46,6 +48,7 @@ function Navbar() {
                                 }}>
                                 {theme === "dark" ? <FiSun /> : <BsFillMoonStarsFill />}</Button>
                             <Link to="/profile"><Text fontSize="xl" fontWeight="semibold" color="bg.inverted">Profile</Text></Link>
+                            {user?.role === "ADMIN" && <Link to="/admin"><Text fontSize="xl" fontWeight="semibold" color="bg.inverted">Admin</Text></Link>}
 
                         </Flex>
                     </Flex>

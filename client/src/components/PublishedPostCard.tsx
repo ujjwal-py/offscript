@@ -1,4 +1,4 @@
-import { Card, HStack, Text, Image } from '@chakra-ui/react'
+import { Badge, Card, HStack, Stack, Text, Image } from '@chakra-ui/react'
 import { BsSuitHeartFill } from "react-icons/bs";
 import type { PublishedPost } from '@/store/postStore'
 
@@ -12,7 +12,12 @@ function PublishedPostCard({ post }: { post: PublishedPost }) {
             <Card.Body display="flex" flexDirection="row" justifyContent="space-between">
                 <HStack>
                     {post.imageUrl && <Image src={post.imageUrl} width="20" height="20" alt={post.title} />}
-                    <Card.Title fontSize="lg">{post.title}</Card.Title>
+                    <Stack>
+                        <Card.Title fontSize="lg">{post.title}</Card.Title>
+                        <Badge width="fit-content" colorPalette="green">
+                            {post.status}
+                        </Badge>
+                    </Stack>
                 </HStack>
                 <HStack gap="2">
                     <BsSuitHeartFill />

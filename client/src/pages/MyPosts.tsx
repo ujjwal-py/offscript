@@ -4,10 +4,12 @@ import DraftedPostCard from '@/components/DraftedPostCard';
 import PostFormCard from '@/components/PostFormCard';
 import UserPostDialogue from '@/components/PostDialogue';
 import type { DraftPost } from '@/store/postStore';
+import LoadingScreen from '@/components/LoadingScreen';
+import EmptyState from '@/components/EmptyState';
 
 
 function MyPosts() {
-    const { data, loading, refetch } = useFetch<DraftPost[]>("/drafts");
+    const { data, loading, refetch } = useFetch<DraftPost[]>("/unpublished");
 
 
 
@@ -21,7 +23,7 @@ function MyPosts() {
             {/* drafted posts */}
             <div>
                 <Text textAlign="center" fontSize="3xl" fontWeight="bold"> Drafted Posts</Text>
-                {loading === false ?
+                {loading ? <LoadingScreen message="Loading posts or data please wait" /> : data && data.length > 0 ?
                     <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {data?.map((post) => (
                             <UserPostDialogue key={post.id}
@@ -34,7 +36,7 @@ function MyPosts() {
                             >
                             </UserPostDialogue>
                         ))}
-                    </ul> : <h3 color="white">hold tight, fetching your drafts</h3>
+                    </ul> : <EmptyState message="No drafts or pending posts found." />
                 }
 
             </div>

@@ -1,4 +1,4 @@
-import { Card, Text } from '@chakra-ui/react'
+import { Badge, Card, Text } from '@chakra-ui/react'
 import type { DraftPost } from '@/store/postStore'
 
 type DraftedPostCardProps = {
@@ -14,6 +14,12 @@ function DraftedPostCard({ post }: DraftedPostCardProps) {
             _hover={{ borderColor: "bg.inverted", cursor: "pointer" }} >
             <Card.Body gap="1">
                 <Card.Title fontSize="lg">{post.title}</Card.Title>
+                <Badge
+                    width="fit-content"
+                    colorPalette={post.status === "PENDING" ? "orange" : "blue"}
+                >
+                    {post.status}
+                </Badge>
             </Card.Body>
             <Card.Footer gap="1">
                 <Text fontSize="sm" color="gray.500">

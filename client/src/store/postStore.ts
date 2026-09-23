@@ -14,10 +14,12 @@ interface BasePost {
     id: number;
     title: string;
     description?: string;
-    published: boolean;
     updatedAt: string;
     imageUrl?: string;
+    status: PostStatus;
 }
+
+export type PostStatus = "DRAFT" | "PENDING" | "PUBLISHED" | "REJECTED" | "REMOVED";
 
 export interface HomePost extends BasePost {
     author: Author;
@@ -29,6 +31,8 @@ export type DraftPost = BasePost;
 export interface PublishedPost extends BasePost {
     Likes: Likes[]
 }
+
+export type AdminPost = HomePost;
 
 export type OpenablePost = HomePost | DraftPost | PublishedPost;
 

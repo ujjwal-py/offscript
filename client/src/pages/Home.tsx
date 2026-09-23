@@ -16,6 +16,8 @@ import {
 } from "@chakra-ui/react"
 import { LuChevronRight, LuChevronLeft } from "react-icons/lu"
 import SearchOptions from '@/components/SearchOptions';
+import LoadingScreen from '@/components/LoadingScreen';
+import EmptyState from '@/components/EmptyState';
 function Home() {
     const [page, setPage] = useState<number>(1);
     const posts = usePostStore((state) => state.posts);
@@ -39,7 +41,7 @@ function Home() {
             <Text textAlign="center" fontSize="4xl" fontWeight="bold">Home Feed</Text>
             <SearchOptions />
 
-            {!loading && posts ? <Box as="ul" className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' bg="bg" >
+            {loading ? <LoadingScreen message="Waking up render from sleep, please wait" /> : posts && posts.length > 0 ? <Box as="ul" className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' bg="bg" >
                 {posts.map((post) => (
                     <PostDialogue
                         key={post.id}
@@ -51,7 +53,7 @@ function Home() {
                 ))}
             </Box>
                 :
-                <h2 className="text-cyan-200">Hold on we are fetching posts</h2>}
+                <EmptyState />}
 
             <Pagination.Root count={20}
                 margin="auto"

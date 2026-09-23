@@ -20,8 +20,8 @@ function PostFormCard({ refetch, usage, setOpen }: PostFromCardProps) {
     const initialData: DraftPost = {
         id: -1,
         title: "",
-        published: false,
-        updatedAt: ""
+        updatedAt: "",
+        status: "DRAFT",
     }
     const [data, setData] = useState<DraftPost>(post || initialData);
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -36,7 +36,7 @@ function PostFormCard({ refetch, usage, setOpen }: PostFromCardProps) {
         // e.preventDefault();
         const formData = new FormData();
         formData.append("title", data.title);
-        formData.append("published", data.published ? "publish" : "draft");
+        formData.append("status", data.status);
 
         if (data.description) {
             formData.append("description", data.description);
@@ -139,16 +139,16 @@ function PostFormCard({ refetch, usage, setOpen }: PostFromCardProps) {
                         </HStack>
                     </Field.Root>
                     <Field.Root >
-                        <Field.Label>Save as Draft?</Field.Label>
-                        <RadioCard.Root value={data.published ? "publish" : "draft"}
+                        <Field.Label>Post status</Field.Label>
+                        <RadioCard.Root value={data.status}
                             onValueChange={(e) => {
                                 if (e.value === null) return;
                                 setData((prev) => ({
                                     ...prev,
-                                    published: e.value === "publish" ? true : false,
+                                    status: e.value as "DRAFT" | "PENDING",
                                 }));
                             }}
-                            name="published">
+                            name="status">
                             <HStack
                                 width="full"
                                 align="stretch"
@@ -156,17 +156,17 @@ function PostFormCard({ refetch, usage, setOpen }: PostFromCardProps) {
                                 justifyContent="space-between"
                                 gap="2"
                             >
-                                <RadioCard.Item value="draft" >
+                                <RadioCard.Item value="DRAFT" >
                                     <RadioCard.ItemHiddenInput />
                                     <RadioCard.ItemControl>
-                                        <RadioCard.ItemText>Yes</RadioCard.ItemText>
+                                    <RadioCard.ItemText>Save as draft</RadioCard.ItemText>
                                         <RadioCard.ItemIndicator />
                                     </RadioCard.ItemControl>
                                 </RadioCard.Item>
-                                <RadioCard.Item value="publish">
+                                <RadioCard.Item value="PENDING">
                                     <RadioCard.ItemHiddenInput />
                                     <RadioCard.ItemControl>
-                                        <RadioCard.ItemText>No</RadioCard.ItemText>
+                                    <RadioCard.ItemText>Submit for review</RadioCard.ItemText>
                                         <RadioCard.ItemIndicator />
                                     </RadioCard.ItemControl>
                                 </RadioCard.Item>
@@ -176,7 +176,7 @@ function PostFormCard({ refetch, usage, setOpen }: PostFromCardProps) {
                 </Stack>
             </Card.Body>
             <Card.Footer flexWrap="wrap" justifyContent="flex-end" gap="2">
-                <Button onClick={handleSubmit} variant="solid">{data.published ? "Publish" : "Draft"}</Button>
+                <Button onClick={handleSubmit} variant="solid">{data.status === "PENDING" ? "Submit for review" : "Save draft"}</Button>
                 {usage === "update" && <Button variant="outline" color="red.400" onClick={handleDelete}>Delete</Button>}
             </Card.Footer>
         </Card.Root >

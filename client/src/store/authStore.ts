@@ -5,6 +5,7 @@ interface User {
     email: string;
     name?: string;
     joined_date: string
+    role?: "USER" | "ADMIN";
 }
 
 interface AuthState {

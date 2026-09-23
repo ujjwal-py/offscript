@@ -19,11 +19,11 @@ import {
     searchUserPosts,
     deletePostUser,
     editPostStatusAdmin,
-    setPendingPostUser
+    getPendingPostsAdmin,
 } from "./controller/post.controller";
 import { authenticate, requireRole } from "../../middlewares/auth";
 import { validate } from "../../middlewares/validate";
-import { createPostSchema, updatePostSchema } from "../../schemas/post.schema";
+import { createPostSchema, updatePostSchema, adminPostSchema } from "../../schemas/post.schema";
 import { UserSchema } from "../../schemas/user.schema";
 import { upload } from "../../middlewares/upload";
 
@@ -49,6 +49,6 @@ v1.post("/like-post/:id", authenticate, likePost)
 v1.delete("/dislike-post/:id", authenticate, dislikePost)
 v1.get("/search-public", searchPublicPosts)
 v1.get("/search-user-posts", authenticate, searchUserPosts)
-v1.put("/set-pending/:id", authenticate, setPendingPostUser)
-v1.put("/update-post-status/:id", authenticate, requireRole("ADMIN"), editPostStatusAdmin)
+v1.put("/update-post-status/:id", authenticate, requireRole("ADMIN"), validate(adminPostSchema), editPostStatusAdmin)
+v1.get("/pending-posts", authenticate, requireRole("ADMIN"), getPendingPostsAdmin)
 export default v1;

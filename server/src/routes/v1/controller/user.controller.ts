@@ -34,7 +34,7 @@ export const createUser = async (req: Request<{}, any, UserBody>, res: Response)
     })
     res.status(200).json({
         message: "user created",
-        user: { id: newUser.id, name: newUser.name, email: newUser.email, createdAt: newUser.createdAt }
+        user: { id: newUser.id, name: newUser.name, email: newUser.email, createdAt: newUser.createdAt, role: newUser.role }
     });
 }
 
