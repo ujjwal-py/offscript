@@ -6,9 +6,8 @@ import { Prisma } from "../../../generated/prisma/client";
 import { supabase } from "../../../lib/supabase";
 
 
-
 export const createPost = async (req: Request<{}, any, NewPostBody>, res: Response) => {
-    const { title, description, published } = req.body;
+    const { title, description } = req.body;
     const authorId = req.user?.user_id;
     if (!authorId) {
         throw new UnauthorizedError();
@@ -37,7 +36,6 @@ export const createPost = async (req: Request<{}, any, NewPostBody>, res: Respon
         data: {
             title,
             description,
-            published,
             authorId,
             imageUrl
         }
@@ -51,7 +49,7 @@ export const editPost = async (req: Request<{ id: string }, any, UpdatePostBody>
         throw new UnauthorizedError();
     }
     const id = parseInt(req.params.id, 10);
-    const { title, description, published } = req.body;
+    const { title, description } = req.body;
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
     const post = await prisma.posts.update({
@@ -62,7 +60,6 @@ export const editPost = async (req: Request<{ id: string }, any, UpdatePostBody>
         data: {
             ...(title !== undefined && { title }),
             ...(description !== undefined && { description }),
-            ...(published !== undefined && { published }),
             ...(imageUrl !== null && { imageUrl }),
         }
     });
@@ -80,7 +77,7 @@ export const getAllPosts = async (req: Request, res: Response) => {
 
     const posts = await prisma.posts.findMany({
         where: {
-            published: true
+            status: "PUBLISHED"
         },
         skip: offset,
         take: limit,
@@ -123,14 +120,13 @@ export const searchPublicPosts = async (req: Request, res: Response) => {
                 contains: q,
                 mode: "insensitive"
             },
-            published: true
+            status: "PUBLISHED"
         },
         orderBy,
         select: {
             id: true,
             title: true,
             description: true,
-            published: true,
             updatedAt: true,
             imageUrl: true,
             Likes: true,
@@ -145,18 +141,19 @@ export const searchPublicPosts = async (req: Request, res: Response) => {
     res.status(200).json(posts);
 }
 
-export const userDraftPosts = async (req: Request, res: Response) => {
+export const userUnPublishedPosts = async (req: Request, res: Response) => {
     const authorId = req.user?.user_id;
     const posts = await prisma.posts.findMany({
         where: {
             authorId: authorId,
-            published: false
+            status: {
+                in: ["DRAFT", "PENDING"]
+            }
         },
         select: {
             id: true,
             title: true,
             description: true,
-            published: true,
             updatedAt: true,
             Likes: {
                 select: {
@@ -177,7 +174,9 @@ export const userPublishedPosts = async (req: Request, res: Response) => {
     const posts = await prisma.posts.findMany({
         where: {
             authorId: authorId,
-            published: true
+            status: {
+                in: ["PUBLISHED", "REMOVED"]
+            }
         },
         orderBy,
         select: {
@@ -363,4 +362,42 @@ export const dislikePost = async (req: Request<{ id: string }>, res: Response) =
         }
     });
     res.status(200).json({ message: "Post disliked successfully" });
+}
+
+export const setPendingPostUser = async (req: Request<{ id: string }>, res: Response) => {
+    const authorId = req.user?.user_id!;
+    const postId = parseInt(req.params.id, 10);
+    const existingPost = await prisma.posts.findUnique({
+        where: {
+            id: postId,
+            authorId
+        }
+    });
+    if (!existingPost) {
+        throw new NotFoundError("Post not found or it does not belong to the user");
+    }
+    const response = await prisma.posts.update({
+        where: {
+            id: postId,
+            authorId
+        },
+        data: {
+            status: "PENDING"
+        }
+    });
+    res.status(200).json({ message: "Post is set to be published" });
+}
+
+export const editPostStatusAdmin = async (req: Request<{ id: string }>, res: Response) => {
+    const postId = parseInt(req.params.id, 10);
+    const { status } = req.body;
+    const response = await prisma.posts.update({
+        where: {
+            id: postId
+        },
+        data: {
+            status
+        }
+    });
+    res.status(200).json({ message: "Post status updated successfully" });
 }

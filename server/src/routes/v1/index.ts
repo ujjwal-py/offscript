@@ -10,14 +10,16 @@ import {
     createPost,
     getAllPosts,
     editPost,
-    userDraftPosts,
+    userUnPublishedPosts,
     userPublishedPosts,
     deletePostAdmin,
     dislikePost,
     likePost,
     searchPublicPosts,
     searchUserPosts,
-    deletePostUser
+    deletePostUser,
+    editPostStatusAdmin,
+    setPendingPostUser
 } from "./controller/post.controller";
 import { authenticate, requireRole } from "../../middlewares/auth";
 import { validate } from "../../middlewares/validate";
@@ -38,7 +40,7 @@ v1.post("/logout", authenticate, logout);
 // posts routes
 v1.post("/new-post", authenticate, upload.single("image"), validate(createPostSchema), createPost)
 v1.get("/posts", getAllPosts)
-v1.get("/drafts", authenticate, userDraftPosts)
+v1.get("/unpublished", authenticate, userUnPublishedPosts)
 v1.get("/published", authenticate, userPublishedPosts)
 v1.put("/update-post/:id", authenticate, upload.single("image"), validate(updatePostSchema), editPost)
 v1.delete("/delete-post-admin/:id", authenticate, requireRole("ADMIN"), deletePostAdmin);
@@ -47,4 +49,6 @@ v1.post("/like-post/:id", authenticate, likePost)
 v1.delete("/dislike-post/:id", authenticate, dislikePost)
 v1.get("/search-public", searchPublicPosts)
 v1.get("/search-user-posts", authenticate, searchUserPosts)
+v1.put("/set-pending/:id", authenticate, setPendingPostUser)
+v1.put("/update-post-status/:id", authenticate, requireRole("ADMIN"), editPostStatusAdmin)
 export default v1;

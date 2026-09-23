@@ -32,12 +32,20 @@ model Posts {
   id          Int      @id @default(autoincrement())
   title       String
   description String?
-  published   Boolean  @default(false)
+  status      Status   @default(DRAFT)
   author      User     @relation(fields: [authorId], references: [id])
   authorId    String
   imageUrl    String?
   Likes       Likes[]
   updatedAt   DateTime @updatedAt
+}
+
+enum Status {
+  DRAFT // default sets for new posts
+  PENDING // when user applies for publishing
+  PUBLISHED // admin or moderator approves
+  REJECTED // admin rejects
+  REMOVED // admin deleted 
 }
 
 model Likes {

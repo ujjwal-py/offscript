@@ -62,7 +62,7 @@ export const logIn = async (req: Request<{}, any, UserBody>, res: Response) => {
     })
     res.status(200).json({
         message: "User signin Succesfully",
-        user: { id: user.id, name: user.name, email: user.email, createdAt: user.createdAt }
+        user: { id: user.id, name: user.name, email: user.email, createdAt: user.createdAt, role: user.role }
     });
 
 }
@@ -104,3 +104,4 @@ export const logout = async (req: Request, res: Response) => {
     });
     res.status(200).json({ message: "Logged out" });
 }
+
