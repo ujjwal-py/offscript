@@ -52,7 +52,7 @@ function Home() {
             }
         }
         getMe();
-    }, [user])
+    }, [])
 
     return (
         <Flex direction="column" bg="bg" minH="100vh">
