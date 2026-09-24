@@ -15,9 +15,11 @@ import {
     Flex,
 } from "@chakra-ui/react"
 import { LuChevronRight, LuChevronLeft } from "react-icons/lu"
+import { api } from '@/Api';
 import SearchOptions from '@/components/SearchOptions';
 import LoadingScreen from '@/components/LoadingScreen';
 import EmptyState from '@/components/EmptyState';
+import { useAuthStore } from '@/store/authStore';
 function Home() {
     const [page, setPage] = useState<number>(1);
     const posts = usePostStore((state) => state.posts);
@@ -25,6 +27,8 @@ function Home() {
     const q = useOptionStore((state) => state.q);
     const order = useOptionStore((state) => state.order);
     const sort_by = useOptionStore((state) => state.sortBy);
+    const user = useAuthStore((state) => state.user);
+    const setUser = useAuthStore((state) => state.setUser);
 
     const postsUrl = q.trim() ? "/search-public" : "/posts"; // if searchbox is empty then defaults to simple fetch
     const { data, loading, refetch } = useFetch<HomePost[]>(postsUrl,
@@ -35,6 +39,20 @@ function Home() {
         }
 
     }, [data])
+
+    useEffect(() => {
+        const getMe = async () => {
+            try {
+                const res = await api.get("/me");
+                if (res.status === 200) {
+                    setUser(res.data);
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        getMe();
+    }, [user])
 
     return (
         <Flex direction="column" bg="bg" minH="100vh">
