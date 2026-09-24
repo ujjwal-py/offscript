@@ -301,6 +301,9 @@ Build command:
 npm run build
 ```
 
-The project includes `client/vercel.json`, which rewrites frontend routes to `index.html`. This allows direct navigation and refreshes on routes such as `/profile` and `/my-posts`.
+
+---
+
+Built with care by [Ujjwal](https://github.com/ujjwal-py) · [View more projects on GitHub](https://github.com/ujjwal-py)
 
 

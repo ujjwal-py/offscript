@@ -10,6 +10,7 @@ import { useThemeStore } from './store/themeStore';
 import { Toaster } from './components/ui/toaster';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminProtected from './components/AdminProtected';
+import Footer from './components/Footer';
 
 function App() {
   const { theme } = useThemeStore();
@@ -29,6 +30,7 @@ function App() {
             </Route>
           </Route>
         </Routes>
+        <Footer />
         <Toaster />
       </Theme>
     </>
