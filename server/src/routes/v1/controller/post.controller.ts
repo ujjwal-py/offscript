@@ -151,7 +151,7 @@ export const userUnPublishedPosts = async (req: Request, res: Response) => {
         where: {
             authorId: authorId,
             status: {
-                in: ["DRAFT", "PENDING"]
+                in: ["DRAFT", "PENDING", "REJECTED"]
             }
         },
         select: {

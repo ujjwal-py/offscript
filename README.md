@@ -1,6 +1,6 @@
 # Offscript
 
-A full-stack Blog site application built with React, TypeScript, Express, Prisma, PostgreSQL, and Supabase. Users can create and manage posts, publish or draft content, search public posts, like posts, upload images, and authenticate with secure JWT cookies.
+Offscript is a fullstack blogging and social publishing platform built with React, TypeScript, Express, Prisma, PostgreSQL, and Supabase. Users can create drafts, submit posts for moderation, manage published content, search and like public posts, upload images, and authenticate securely with JWT cookies. Administrators can review pending submissions, approve or reject content, and remove published posts when necessary.
 
 ## Project structure
 
@@ -23,16 +23,77 @@ offscript/
 
 ## Features
 
-- User signup, signin, logout, and authenticated routes
+### Authentication and authorization
+
+- User signup, signin, logout, and current-user verification
 - JWT authentication stored in an HTTP-only cookie
-- Create, edit, publish, and delete posts
-- Draft and published post views
-- Public post search with sorting and ordering
-- Real time like and unlike posts without refetching
-- Image uploads with file type and size validation
-- Responsive layout for desktop and mobile screens
-- Client-side routing with React Router
-- Global client state with Zustand
+- Cross-origin credential support for the Vercel frontend and Render backend
+- Protected routes for authenticated users
+- Role-based authorization with `USER` and `ADMIN` roles
+- Admin-only dashboard and moderation endpoints
+- Password hashing with bcrypt
+
+### Post creation and lifecycle
+
+- Create posts with a title, description, and optional image
+- Edit posts owned by the current user
+- Delete user-owned posts
+- Save posts as `DRAFT`
+- Submit posts for moderation as `PENDING`
+- Admin moderation statuses: `PUBLISHED`, `REJECTED`, and `REMOVED`
+- Status badges on draft, pending, and published post cards
+- Author information displayed with public posts
+- Post ownership enforced by authenticated backend routes
+
+### Admin moderation
+
+- Dedicated admin dashboard at `/admin`
+- View all pending posts submitted by users
+- Open posts in a full-screen dialogue to inspect the complete content
+- Approve pending posts and change their status to `PUBLISHED`
+- Reject pending posts and change their status to `REJECTED`
+- Search published public posts by title
+- Remove published posts by changing their status to `REMOVED`
+- Admin actions protected by both frontend route guards and backend role checks
+
+### Search, sorting, and pagination
+
+- Search public posts by title
+- Search the current user's published posts by title
+- Debounced search input
+- Sort posts by likes or last updated time
+- Sort results in ascending or descending order
+- Paginated home feed
+- Empty states for no posts, no drafts, and no search results
+
+### Likes and interactions
+
+- Like published posts
+- Unlike posts that the current user has already liked
+- Like counts displayed on post cards
+- Immediate like and unlike UI updates through Zustand state
+- Unauthenticated like attempts show a sign-in prompt
+- Duplicate likes are prevented on the backend
+
+### Media and validation
+
+- Image uploads handled with Multer
+- Images stored in Supabase Storage
+- JPEG, PNG, and WebP file validation
+- Five-megabyte upload size limit
+- Request validation with Zod
+- Centralized backend custom errors and error codes
+- Centralized Axios error toasts for API and network failures
+
+### User interface
+
+- Chakra UI component-based interface
+- Tailwind CSS utility classes for layout and responsive grids
+- Responsive desktop and mobile layouts
+- Dark and light theme switching
+- Chakra loading screens with contextual messages
+- Chakra toast notifications for success, API, and network errors
+- Full-screen post dialogues for viewing, editing, and moderation
 
 ## Tech stack
 
@@ -242,8 +303,4 @@ npm run build
 
 The project includes `client/vercel.json`, which rewrites frontend routes to `index.html`. This allows direct navigation and refreshes on routes such as `/profile` and `/my-posts`.
 
-#
 
-## License
-
-This project does not currently declare a formal open-source license.
