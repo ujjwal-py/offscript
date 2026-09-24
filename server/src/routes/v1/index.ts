@@ -31,7 +31,6 @@ const v1 = express.Router()
 
 // auth or user routes
 v1.post("/signup", validate(UserSchema), createUser);
-v1.get("/users", allUsers);
 v1.post("/signin", validate(UserSchema), logIn)
 v1.get("/me", authenticate, getMe);
 v1.post("/logout", authenticate, logout);
