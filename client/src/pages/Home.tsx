@@ -27,7 +27,6 @@ function Home() {
     const q = useOptionStore((state) => state.q);
     const order = useOptionStore((state) => state.order);
     const sort_by = useOptionStore((state) => state.sortBy);
-    const user = useAuthStore((state) => state.user);
     const setUser = useAuthStore((state) => state.setUser);
 
     const postsUrl = q.trim() ? "/search-public" : "/posts"; // if searchbox is empty then defaults to simple fetch
