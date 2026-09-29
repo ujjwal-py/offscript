@@ -29,7 +29,7 @@ function Home() {
     const sort_by = useOptionStore((state) => state.sortBy);
     const setUser = useAuthStore((state) => state.setUser);
 
-    const postsUrl = q.trim() ? "/search-public" : "/posts"; // if searchbox is empty then defaults to simple fetch
+    const postsUrl = q.trim() ? "/public-posts" : "/posts"; // if searchbox is empty then defaults to simple fetch
     const { data, loading, refetch } = useFetch<HomePost[]>(postsUrl,
         { q, page, sort_by, order });
     useEffect(() => {
@@ -46,8 +46,8 @@ function Home() {
                 if (res.status === 200) {
                     setUser(res.data);
                 }
-            } catch (err) {
-                console.log(err)
+            } catch (err) { 
+                // console.log(err)
             }
         }
         getMe();

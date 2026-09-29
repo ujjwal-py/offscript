@@ -19,7 +19,12 @@ app.use(cookieParser());
 
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 app.get("/", (req: Request, res: Response) => {
-    res.send("Hello World");
+    res.status(200).json({
+        message: "Hello, This is the api for offscript",
+        copyright: "Ujjwal Kumar",
+        github: "https://github.com/ujjwal-py",
+        linkedin: "https://www.linkedin.com/in/ujjwalkr17/"
+    });
 })
 app.use("/v1", v1);
 app.use(errorHandler)

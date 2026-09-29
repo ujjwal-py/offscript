@@ -105,3 +105,10 @@ export const logout = async (req: Request, res: Response) => {
     res.status(200).json({ message: "Logged out" });
 }
 
+
+export const apiHealth = async (req: Request, res: Response) => {
+    res.status(200).json({
+        message: "Up and Running fine",
+        version: "v1"
+    })
+}

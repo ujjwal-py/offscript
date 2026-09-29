@@ -78,7 +78,7 @@ function PostDialogue({ post, trigger, refetch, DialogContent, usage }: PostDial
                             <Dialog.Footer>
                             </Dialog.Footer>
                             <Dialog.CloseTrigger asChild>
-                                <Button bg="purple.solid" color="bg" size="sm" >Close</Button>
+                                <Button bg="blue.emphasized" color="black" rounded="2xl" size="sm" >Close</Button>
                             </Dialog.CloseTrigger>
                         </Dialog.Content>
                     </Dialog.Positioner>

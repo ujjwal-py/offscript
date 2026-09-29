@@ -46,9 +46,9 @@ function PostFormCard({ refetch, usage, setOpen }: PostFromCardProps) {
         }
         try {
             if (usage === "create") {
-                await api.post("/new-post", formData);
+                await api.post("/post", formData);
             } else {
-                await api.put(`/update-post/${data.id}`, formData);
+                await api.put(`/post/${data.id}`, formData);
             }
             // console.log(res.data);
             if (setOpen) {
@@ -68,7 +68,7 @@ function PostFormCard({ refetch, usage, setOpen }: PostFromCardProps) {
     }
     const handleDelete = async () => {
         try {
-            await api.delete(`/delete-post/${data.id}`);
+            await api.delete(`/post/${data.id}`);
             // console.log(res.data);
 
             if (setOpen) {

@@ -37,7 +37,7 @@ function Navbar() {
                         flexWrap="wrap"
                     >
                         <Flex gap={{ base: "4", md: "8" }} alignItems="center">
-                            <Text fontSize="xl" fontWeight="bold">Offscript</Text>
+                            <Text fontSize="xl" color="bg.inverted" fontWeight="bold">Offscript</Text>
                             <Link to="/home"><Text fontSize="xl" fontWeight="semibold" color="bg.inverted">Home</Text></Link>
                             <Link to="/my-posts"><Text fontSize="xl" fontWeight="semibold" color="bg.inverted">Create</Text></Link>
                         </Flex>

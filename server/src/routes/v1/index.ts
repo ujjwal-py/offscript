@@ -1,10 +1,10 @@
 import express from "express"
 import {
-    allUsers,
     createUser,
     getMe,
     logIn,
-    logout
+    logout, 
+    apiHealth
 } from "./controller/user.controller"
 import {
     createPost,
@@ -29,6 +29,9 @@ import { upload } from "../../middlewares/upload";
 
 const v1 = express.Router()
 
+// health
+v1.get("/", apiHealth);
+
 // auth or user routes
 v1.post("/signup", validate(UserSchema), createUser);
 v1.post("/signin", validate(UserSchema), logIn)
@@ -37,17 +40,17 @@ v1.post("/logout", authenticate, logout);
 
 
 // posts routes
-v1.post("/new-post", authenticate, upload.single("image"), validate(createPostSchema), createPost)
+v1.post("/post", authenticate, upload.single("image"), validate(createPostSchema), createPost)
 v1.get("/posts", getAllPosts)
 v1.get("/unpublished", authenticate, userUnPublishedPosts)
 v1.get("/published", authenticate, userPublishedPosts)
-v1.put("/update-post/:id", authenticate, upload.single("image"), validate(updatePostSchema), editPost)
-v1.delete("/delete-post-admin/:id", authenticate, requireRole("ADMIN"), deletePostAdmin);
-v1.delete("/delete-post/:id", authenticate, deletePostUser);
-v1.post("/like-post/:id", authenticate, likePost)
-v1.delete("/dislike-post/:id", authenticate, dislikePost)
-v1.get("/search-public", searchPublicPosts)
-v1.get("/search-user-posts", authenticate, searchUserPosts)
-v1.put("/update-post-status/:id", authenticate, requireRole("ADMIN"), validate(adminPostSchema), editPostStatusAdmin)
+v1.put("/post/:id", authenticate, upload.single("image"), validate(updatePostSchema), editPost)
+v1.delete("/post-admin/:id", authenticate, requireRole("ADMIN"), deletePostAdmin);
+v1.delete("/post/:id", authenticate, deletePostUser);
+v1.post("/like:id", authenticate, likePost)
+v1.delete("/dislike/:id", authenticate, dislikePost)
+v1.get("/public-posts", searchPublicPosts) // searching all posts 
+v1.get("/user-posts", authenticate, searchUserPosts) //for searching in user posts
+v1.put("/post-status/:id", authenticate, requireRole("ADMIN"), validate(adminPostSchema), editPostStatusAdmin)
 v1.get("/pending-posts", authenticate, requireRole("ADMIN"), getPendingPostsAdmin)
 export default v1;

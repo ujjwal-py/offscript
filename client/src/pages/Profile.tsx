@@ -47,7 +47,7 @@ function Profile() {
   const q = useOptionStore((state) => state.q);
   const sort_by = useOptionStore((state) => state.sortBy);
   const order = useOptionStore((state) => state.order)
-  const postsUrl = q.trim() ? "/search-user-posts" : "/published"
+  const postsUrl = q.trim() ? "/user-posts" : "/published"
 
   const { data, loading, refetch } = useFetch<PublishedPost[]>(postsUrl, { sort_by, order, q })
   const handleLogout = async () => {
