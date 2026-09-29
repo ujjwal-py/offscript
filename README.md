@@ -99,18 +99,18 @@ offscript/
 
 ### Frontend
 
-| Technology       | Version   | Purpose                                  |
-| ---------------- | --------- | ---------------------------------------- |
-| React            | `^19.2.8` | UI library                               |
-| React DOM        | `^19.2.8` | React browser rendering                  |
-| TypeScript       | `~6.0.2`  | Static typing                            |
-| Vite             | `^8.2.2`  | Development server and build tool        |
-| Chakra UI        | `^3.37.0` | Component library and responsive styling |
-| Tailwind CSS     | `^4.3.3`  | Utility-first CSS                        |
-| React Router DOM | `^7.18.3` | Client-side routing                      |
-| Zustand          | `^5.0.15` | Global state management                  |
-| Axios            | `^1.20.0` | HTTP requests                            |
-| React Icons      | `^5.7.0`  | Icons                                    |
+| Technology       | Purpose                                  |
+| ---------------- | ---------------------------------------- |
+| React            | UI library                               |
+| React DOM        | React browser rendering                  |
+| TypeScript       | Static typing                            |
+| Vite             | Development server and build tool        |
+| Chakra UI        | Component library and responsive styling |
+| Tailwind CSS     | Utility-first CSS                        |
+| React Router DOM | Client-side routing                      |
+| Zustand          | Global state management                  |
+| Axios            | HTTP requests                            |
+| React Icons      | Icons                                    |
 
 ### Backend
 
@@ -247,59 +247,29 @@ The API is mounted under `/v1`.
 | `POST` | `/v1/signin` | Public   |
 | `GET`  | `/v1/me`     | Required |
 | `POST` | `/v1/logout` | Required |
-| `GET`  | `/v1/users`  | Public   |
 
 ### Posts
 
 | Method   | Route                   | Auth     |
 | -------- | ----------------------- | -------- |
 | `GET`    | `/v1/posts`             | Public   |
-| `GET`    | `/v1/search-public`     | Public   |
-| `GET`    | `/v1/drafts`            | Required |
+| `GET`    | `/v1/public-posts`      | Public   |
+| `GET`    | `/v1/unpublished`       | Required |
 | `GET`    | `/v1/published`         | Required |
-| `GET`    | `/v1/search-user-posts` | Required |
-| `POST`   | `/v1/new-post`          | Required |
-| `PUT`    | `/v1/update-post/:id`   | Required |
-| `DELETE` | `/v1/delete-post/:id`   | Required |
-| `POST`   | `/v1/like-post/:id`     | Required |
-| `DELETE` | `/v1/dislike-post/:id`  | Required |
+| `GET`    | `/v1/user-posts`        | Required |
+| `POST`   | `/v1/post`              | Required |
+| `PUT`    | `/v1/post/:id`          | Required |
+| `DELETE` | `/v1/post/:id`          | Required |
+| `POST`   | `/v1/like/:id`          | Required |
+| `DELETE` | `/v1/dislike/:id`       | Required |
 
-## Production deployment
+### Admin
+| Method   | Route                   |
+| -------- | ------------------------|
+| `DELETE` | `/v1/post-admin/:id`    | 
+| `PUT`    | `/v1/post-status/:id`   |
+| `GET`    | `/v1//pending-posts`    |
 
-### Backend on Render
-
-Set the Render service root directory to `server`.
-
-```text
-Build Command: npm install --include=dev && npm run build
-Start Command: npm start
-```
-
-Required Render environment variables:
-
-```env
-NODE_ENV=production
-DATABASE_URL=your-supabase-postgres-connection-string
-JWT_SECRET=your-production-secret
-FRONTEND_URL=https://your-frontend.vercel.app
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-SUPABASE_BUCKET=your-bucket-name
-```
-
-### Frontend on Vercel
-
-Set the Vercel root directory to `client` and set:
-
-```env
-VITE_BASE_URL=https://your-backend.onrender.com
-```
-
-Build command:
-
-```bash
-npm run build
-```
 
 
 ---
