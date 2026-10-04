@@ -11,6 +11,7 @@ import { Toaster } from './components/ui/toaster';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminProtected from './components/AdminProtected';
 import Footer from './components/Footer';
+import PostPage from './pages/PostPage';
 
 function App() {
   const { theme } = useThemeStore();
@@ -22,6 +23,7 @@ function App() {
           <Route path='/home' element={<Home />} />
           <Route path='/' element={<Home />} />
           <Route path='/auth' element={<Sign />} />
+          <Route path='/post/:id' element={<PostPage/>} />
           <Route element={<Protected />}>
             <Route path='/my-posts' element={<MyPosts />} />
             <Route path='/profile' element={<Profile />} />

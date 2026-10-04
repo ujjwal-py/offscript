@@ -20,6 +20,7 @@ import {
     deletePostUser,
     editPostStatusAdmin,
     getPendingPostsAdmin,
+    getSingleHomePost
 } from "./controller/post.controller";
 import { authenticate, requireRole } from "../../middlewares/auth";
 import { validate } from "../../middlewares/validate";
@@ -41,13 +42,14 @@ v1.post("/logout", authenticate, logout);
 
 // posts routes
 v1.post("/post", authenticate, upload.single("image"), validate(createPostSchema), createPost)
+v1.get("/post/:id", getSingleHomePost)
 v1.get("/posts", getAllPosts)
 v1.get("/unpublished", authenticate, userUnPublishedPosts)
 v1.get("/published", authenticate, userPublishedPosts)
 v1.put("/post/:id", authenticate, upload.single("image"), validate(updatePostSchema), editPost)
 v1.delete("/post-admin/:id", authenticate, requireRole("ADMIN"), deletePostAdmin);
 v1.delete("/post/:id", authenticate, deletePostUser);
-v1.post("/like:id", authenticate, likePost)
+v1.post("/like/:id", authenticate, likePost)
 v1.delete("/dislike/:id", authenticate, dislikePost)
 v1.get("/public-posts", searchPublicPosts) // searching all posts 
 v1.get("/user-posts", authenticate, searchUserPosts) //for searching in user posts

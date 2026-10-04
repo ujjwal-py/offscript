@@ -6,6 +6,7 @@ import { api } from '@/Api';
 import { useLikeStore, type HomePost } from '@/store/postStore';
 import { useAuthStore } from '@/store/authStore';
 import { toaster } from './ui/toaster';
+import { AxiosError } from 'axios';
 
 
 function LikeButton({ post }: { post: HomePost }) {
@@ -51,7 +52,10 @@ function LikeButton({ post }: { post: HomePost }) {
 
         } catch (err) {
             // The Axios interceptor displays the error toast.
-            console.log(err)
+            if (err instanceof AxiosError) {
+                console.log(err.message)
+                console.log(err.cause)
+            }
 
         } finally {
             setPending(false);

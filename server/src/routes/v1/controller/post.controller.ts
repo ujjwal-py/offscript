@@ -418,3 +418,34 @@ export const getPendingPostsAdmin = async (req: Request, res: Response) => {
     });
     res.status(200).json({ posts: pendingPosts })
 }
+
+export const getSingleHomePost = async (req: Request, res: Response) => {
+    const id: number = Number(req.params.id);
+    const post = await prisma.posts.findUnique({
+        where : {
+            id,
+            status: "PUBLISHED"
+        }, 
+        select: {
+            id: true,
+            title: true,
+            description: true,
+            status: true,
+            imageUrl: true,
+            author: {
+                select: {
+                    name: true,
+                    email: true
+                }
+            },
+            Likes: {
+                select: {
+                    userId: true,
+                    postId: true
+                }
+            },
+            updatedAt: true,
+        }
+    });
+    res.status(200).json({post})
+}

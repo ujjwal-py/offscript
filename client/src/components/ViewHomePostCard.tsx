@@ -33,7 +33,7 @@ function ViewPostCard() {
         <Text
           width="full"
           textAlign="center"
-          fontSize={{ base: "xl", md: "2xl" }}
+          fontSize={{ base: "xl", md: "4xl" }}
           fontWeight="bold"
           overflowWrap="anywhere"
         >

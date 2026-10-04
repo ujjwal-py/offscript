@@ -1,6 +1,7 @@
 import {
     Button,
     Dialog,
+    Flex,
     Portal,
 }
     from "@chakra-ui/react"
@@ -9,6 +10,7 @@ import { usePostStore } from "@/store/postStore";
 import type { OpenablePost } from "@/store/postStore";
 import { Theme } from "@chakra-ui/react";
 import { useThemeStore } from "@/store/themeStore";
+import { Link } from "react-router-dom";
 
 type UsageProps = "create" | "update" | "view"
 
@@ -43,7 +45,7 @@ function PostDialogue({ post, trigger, refetch, DialogContent, usage }: PostDial
     return (
         <Dialog.Root
             lazyMount
-            size={usage === "view" ? "full" : "cover"}
+            size = "cover"
             placement="center"
             scrollBehavior="inside"
             motionPreset="slide-in-bottom"
@@ -68,7 +70,15 @@ function PostDialogue({ post, trigger, refetch, DialogContent, usage }: PostDial
                             bg="bg.emphasized"
                         >
                             <Dialog.Header>
-                                <Dialog.Title></Dialog.Title>
+                                <Dialog.Title w="full">
+                                    <Flex direction="row" justify="space-between">
+                                        <Link to={`/post/${post.id}`}
+                                        target="_blank" >View in New tab</Link>
+                                        <Button variant="surface" size="sm"
+                                         onClick={() => setOpen(false)}>Close</Button>
+                                    </Flex>
+                                    
+                                </Dialog.Title>
                             </Dialog.Header>
                             <Dialog.Body px={{ base: "3", md: "6" }} overflowY="auto">
                                 {currPost ? <DialogContent
@@ -77,9 +87,8 @@ function PostDialogue({ post, trigger, refetch, DialogContent, usage }: PostDial
                             </Dialog.Body>
                             <Dialog.Footer>
                             </Dialog.Footer>
-                            <Dialog.CloseTrigger asChild>
-                                <Button bg="blue.emphasized" color="black" rounded="2xl" size="sm" >Close</Button>
-                            </Dialog.CloseTrigger>
+                            
+                            
                         </Dialog.Content>
                     </Dialog.Positioner>
                 </Theme>
