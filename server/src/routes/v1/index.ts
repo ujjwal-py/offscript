@@ -3,7 +3,7 @@ import {
     createUser,
     getMe,
     logIn,
-    logout, 
+    logout,
     apiHealth
 } from "./controller/user.controller"
 import {
@@ -42,17 +42,17 @@ v1.post("/logout", authenticate, logout);
 
 // posts routes
 v1.post("/post", authenticate, upload.single("image"), validate(createPostSchema), createPost)
-v1.get("/post/:id", getSingleHomePost)
+v1.get("/posts/:id", getSingleHomePost)
 v1.get("/posts", getAllPosts)
-v1.get("/unpublished", authenticate, userUnPublishedPosts)
-v1.get("/published", authenticate, userPublishedPosts)
-v1.put("/post/:id", authenticate, upload.single("image"), validate(updatePostSchema), editPost)
-v1.delete("/post-admin/:id", authenticate, requireRole("ADMIN"), deletePostAdmin);
+v1.get("/user/posts/unpublished", authenticate, userUnPublishedPosts)
+v1.get("/user/posts/published", authenticate, userPublishedPosts)
+v1.put("/posts/:id", authenticate, upload.single("image"), validate(updatePostSchema), editPost)
+v1.delete("/admin/posts/:id", authenticate, requireRole("ADMIN"), deletePostAdmin);
 v1.delete("/post/:id", authenticate, deletePostUser);
-v1.post("/like/:id", authenticate, likePost)
-v1.delete("/dislike/:id", authenticate, dislikePost)
-v1.get("/public-posts", searchPublicPosts) // searching all posts 
-v1.get("/user-posts", authenticate, searchUserPosts) //for searching in user posts
-v1.put("/post-status/:id", authenticate, requireRole("ADMIN"), validate(adminPostSchema), editPostStatusAdmin)
-v1.get("/pending-posts", authenticate, requireRole("ADMIN"), getPendingPostsAdmin)
+v1.post("/posts/:id/like", authenticate, likePost)
+v1.delete("/posts/:id/dislike", authenticate, dislikePost)
+v1.get("/search/posts", searchPublicPosts) // searching all posts
+v1.get("/user/search/posts", authenticate, searchUserPosts) //for searching in user posts
+v1.put("/admin/posts/:id/status", authenticate, requireRole("ADMIN"), validate(adminPostSchema), editPostStatusAdmin)
+v1.get("/admin/posts/pending", authenticate, requireRole("ADMIN"), getPendingPostsAdmin)
 export default v1;

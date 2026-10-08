@@ -9,10 +9,7 @@ import EmptyState from '@/components/EmptyState';
 
 
 function MyPosts() {
-    const { data, loading, refetch } = useFetch<DraftPost[]>("/unpublished");
-
-
-
+    const { data, loading, refetch } = useFetch<DraftPost[]>("/user/posts/unpublished");
     return (
         <div>
 
@@ -29,7 +26,7 @@ function MyPosts() {
                             <UserPostDialogue key={post.id}
                                 trigger={<DraftedPostCard post={post} />}
                                 usage="update"
-                                post={post} // infers the type generic 
+                                post={post} // infers the type generic
                                 refetch={refetch}
                                 DialogContent={PostFormCard}
 

@@ -38,10 +38,10 @@ function LikeButton({ post }: { post: HomePost }) {
         setPending(true);
         try {
             if (!like) {
-                await api.post(`/like/${post.id}`);
+                await api.post(`/posts/${post.id}/like`);
                 addLike({ postId: post.id, userId: user.id })
             } else {
-                await api.delete(`/dislike/${post.id}`);
+                await api.delete(`/posts/${post.id}/dislike`);
                 removeLike({ postId: post.id, userId: user.id })
             }
             toaster.create({

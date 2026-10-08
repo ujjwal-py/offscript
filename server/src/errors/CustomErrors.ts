@@ -26,4 +26,3 @@ export class ValidationError extends CustomError {
         super(400, "V400", message);
     }
 }
-

@@ -53,7 +53,7 @@ function AdminDashboard() {
     const refreshPending = useCallback(async () => {
         setPendingLoading(true);
         try {
-            const response = await api.get<PendingResponse>("/pending-posts");
+            const response = await api.get<PendingResponse>("/admin/posts/pending");
             setPendingPosts(response.data.posts);
         } finally {
             setPendingLoading(false);
@@ -68,7 +68,7 @@ function AdminDashboard() {
 
         setPublishedLoading(true);
         try {
-            const response = await api.get<AdminPost[]>("/search-public", {
+            const response = await api.get<AdminPost[]>("/search/posts", {
                 params: { q, sort_by: sortBy, order },
             });
             setPublishedPosts(response.data);

@@ -12,7 +12,7 @@ type fetchPost = {
 }
 const PostPage = () => {
     const {id} = useParams();
-    const { data, loading} = useFetch(`/post/${id}`)
+    const { data, loading} = useFetch(`/posts/${id}`)
     const user = useAuthStore((state) => state.user);
     const setUser = useAuthStore((state) => state.setUser);
    let post;

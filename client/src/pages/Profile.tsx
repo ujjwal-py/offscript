@@ -12,22 +12,6 @@ import EmptyState from '@/components/EmptyState';
 function ViewPostCard() { // custom postcard to display published posts
   const post = usePostStore((state) => state.currPost)
   if (!post) return <div>loading...</div>
-  // const handleDelete = async () => {    // need to delete the post likes realtions before deleting the post
-  //   try {
-  //     const res = await api.delete(`/delete-post/${post.id}`);
-  //     console.log(res.data);
-  //     if (setOpen) {
-  //       console.log("Closing dialog");
-  //       setOpen(false);
-  //     }
-  //   } catch (err) {
-  //     console.log(err);
-  //   } finally {
-  //     if (refetch) {
-  //       refetch();
-  //     }
-  //   }
-  // }
   return (
     <>
       <Card.Root maxWidth="full" overflow="hidden" borderWidth="2px" borderRadius="md" padding='2' borderColor="grey.300" boxShadow="md" >
@@ -47,7 +31,7 @@ function Profile() {
   const q = useOptionStore((state) => state.q);
   const sort_by = useOptionStore((state) => state.sortBy);
   const order = useOptionStore((state) => state.order)
-  const postsUrl = q.trim() ? "/user-posts" : "/published"
+  const postsUrl = q.trim() ? "/user/search/posts" : "user/posts/published"
 
   const { data, loading, refetch } = useFetch<PublishedPost[]>(postsUrl, { sort_by, order, q })
   const handleLogout = async () => {
