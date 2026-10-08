@@ -3,7 +3,7 @@ import { prisma } from "../../../lib/prisma";
 import { NewPostBody, UpdatePostBody } from "../../../schemas/post.schema";
 import { CustomError, NotFoundError, UnauthorizedError } from "../../../errors/CustomErrors";
 import { Prisma } from "../../../generated/prisma/client";
-import { supabase } from "../../../lib/supabase";
+import { deletePostImage, uploadPostImage } from "../../../lib/supabase";
 
 
 export const createPost = async (req: Request<{}, any, NewPostBody>, res: Response) => {
@@ -12,36 +12,24 @@ export const createPost = async (req: Request<{}, any, NewPostBody>, res: Respon
     if (!authorId) {
         throw new UnauthorizedError();
     }
-    let imageUrl: string | null = null;
-    if (req.file) {
-        const ext = req.file.mimetype.split("/")[1];
-        const imagePath = `${Date.now()}-${Math.round(Math.random() * 1e9)}.${ext}`;
-
-        const { error } = await supabase.storage
-            .from(process.env.SUPABASE_BUCKET!)
-            .upload(imagePath, req.file.buffer, {
-                contentType: req.file.mimetype, // e.g. "image/png", "image/jpeg"
-            });
-
-        if (error) {
-            // console.error(error);
-            throw new CustomError(500, "SUPABASE_UPLOAD_ERROR", "Failed to upload image");
+    const uploadedImage = req.file ? await uploadPostImage(req.file) : null;
+    try {
+        const newPost = await prisma.posts.create({
+            data: {
+                title,
+                description,
+                authorId,
+                imageUrl: uploadedImage?.publicUrl ?? null,
+                status
+            }
+        });
+        res.status(200).json(newPost);
+    } catch (error) {
+        if (uploadedImage) {
+            await deletePostImage(uploadedImage.publicUrl).catch(() => undefined);
         }
-        imageUrl = supabase.storage
-            .from(process.env.SUPABASE_BUCKET!)
-            .getPublicUrl(imagePath).data.publicUrl;
+        throw error;
     }
-    // const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
-    const newPost = await prisma.posts.create({
-        data: {
-            title,
-            description,
-            authorId,
-            imageUrl,
-            status
-        }
-    })
-    res.status(200).json(newPost)
 };
 
 export const editPost = async (req: Request<{ id: string }, any, UpdatePostBody>, res: Response) => {
@@ -50,23 +38,42 @@ export const editPost = async (req: Request<{ id: string }, any, UpdatePostBody>
         throw new UnauthorizedError();
     }
     const id = parseInt(req.params.id, 10);
+    if (!Number.isInteger(id)) {
+        throw new CustomError(400, "INVALID_POST_ID", "Post id must be an integer");
+    }
     const { title, description, status } = req.body;
-    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
-
-    const post = await prisma.posts.update({
-        where: {
-            id,
-            authorId,
-        },
-        data: {
-            ...(title !== undefined && { title }),
-            ...(description !== undefined && { description }),
-            ...(imageUrl !== null && { imageUrl }),
-            ...(status !== undefined && { status }),
-        }
+    const existingPost = await prisma.posts.findUnique({
+        where: { id, authorId },
+        select: { imageUrl: true },
     });
+    if (!existingPost) {
+        throw new NotFoundError("Post not found or it does not belong to the user");
+    }
 
-    res.status(200).json(post);
+    const uploadedImage = req.file ? await uploadPostImage(req.file) : null;
+
+    try {
+        const post = await prisma.posts.update({
+            where: { id, authorId },
+            data: {
+                ...(title !== undefined && { title }),
+                ...(description !== undefined && { description }),
+                ...(uploadedImage && { imageUrl: uploadedImage.publicUrl }),
+                ...(status !== undefined && { status }),
+            }
+        });
+
+        if (uploadedImage && existingPost.imageUrl) {
+            await deletePostImage(existingPost.imageUrl).catch(() => undefined);
+        }
+
+        res.status(200).json(post);
+    } catch (error) {
+        if (uploadedImage) {
+            await deletePostImage(uploadedImage.publicUrl).catch(() => undefined);
+        }
+        throw error;
+    }
 }
 
 export const getAllPosts = async (req: Request, res: Response) => {
@@ -422,10 +429,10 @@ export const getPendingPostsAdmin = async (req: Request, res: Response) => {
 export const getSingleHomePost = async (req: Request, res: Response) => {
     const id: number = Number(req.params.id);
     const post = await prisma.posts.findUnique({
-        where : {
+        where: {
             id,
             status: "PUBLISHED"
-        }, 
+        },
         select: {
             id: true,
             title: true,
@@ -447,5 +454,5 @@ export const getSingleHomePost = async (req: Request, res: Response) => {
             updatedAt: true,
         }
     });
-    res.status(200).json({post})
+    res.status(200).json({ post })
 }
